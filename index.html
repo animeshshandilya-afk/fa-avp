@@ -7,14 +7,15 @@
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
 <style>
 :root{
-  --ink:#0D1117;--ink2:#1C2333;--gold:#C9A84C;--gold-dim:#8A6F2E;--gold-bg:rgba(201,168,76,.1);
+  --ink:#0D1117;--ink2:#1C2333;--gold:#C9A84C;--gold-dim:#8A6F2E;--gold-bg:rgba(201,168,76,.12);
   --cream:#FAF8F4;--stone:#F0EDE8;--border:#E4DDD5;
   --text:#2D3142;--mid:#5C6070;--light:#9AA0AE;
-  --green:#1E6641;--green-bg:#EAF4EE;--green-border:#A8D5B8;
-  --red:#B03A2E;--red-bg:#FDECEA;--red-border:#F1A89E;
-  --amber:#8B4513;--amber-bg:#FDF3E7;--amber-border:#F0C090;
-  --blue:#1A4A7C;--blue-bg:#EBF2FB;--blue-border:#A8C8F0;
-  --purple:#4A2C7C;--purple-bg:#F2EDFB;--purple-border:#C0A8F0;
+  --green:#1E6641;--green-bg:#EAF4EE;
+  --red:#B03A2E;--red-bg:#FDECEA;
+  --amber:#8B4513;--amber-bg:#FDF3E7;
+  --blue:#1A4A7C;--blue-bg:#EBF2FB;
+  --purple:#4A2C7C;--purple-bg:#F2EDFB;
+  --waiting:#0E7490;--waiting-bg:#ECFEFF;
   --r:10px;
 }
 *{box-sizing:border-box;margin:0;padding:0;}
@@ -22,181 +23,255 @@ html{scroll-behavior:smooth;}
 body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--text);min-height:100vh;-webkit-font-smoothing:antialiased;}
 
 /* HEADER */
-.hdr{background:var(--ink);padding:0 20px;height:52px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;}
-.hdr-title{font-family:'DM Serif Display',serif;font-size:16px;color:white;letter-spacing:.01em;}
+.hdr{background:var(--ink);padding:0 16px;height:52px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;}
+.hdr-left{display:flex;align-items:center;gap:12px;}
+.hdr-title{font-family:'DM Serif Display',serif;font-size:15px;color:white;}
 .hdr-title em{color:var(--gold);font-style:normal;}
+.hdr-strat{font-size:10px;color:var(--gold);font-weight:500;padding:3px 9px;border:1px solid rgba(201,168,76,.3);border-radius:10px;white-space:nowrap;cursor:pointer;}
+.hdr-strat:hover{background:rgba(201,168,76,.1);}
+.hdr-time{font-size:11px;color:rgba(255,255,255,.35);}
 
 /* DATE NAV */
-.date-nav{background:white;border-bottom:1px solid var(--border);padding:10px 20px;display:flex;align-items:center;gap:12px;position:sticky;top:52px;z-index:90;}
-.date-arrow{width:30px;height:30px;border:1px solid var(--border);border-radius:8px;background:none;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;color:var(--mid);transition:all .15s;}
+.date-nav{background:white;border-bottom:1px solid var(--border);padding:9px 16px;display:flex;align-items:center;gap:10px;position:sticky;top:52px;z-index:90;}
+.date-arrow{width:28px;height:28px;border:1px solid var(--border);border-radius:7px;background:none;cursor:pointer;font-size:13px;display:flex;align-items:center;justify-content:center;color:var(--mid);transition:all .15s;}
 .date-arrow:hover{border-color:var(--gold);color:var(--gold-dim);}
 .date-display{flex:1;text-align:center;}
-.date-main{font-size:15px;font-weight:600;color:var(--text);}
-.date-sub{font-size:11px;color:var(--light);}
-.today-btn{padding:5px 12px;border:1px solid var(--border);border-radius:16px;background:none;font-family:'DM Sans',sans-serif;font-size:11px;font-weight:500;color:var(--mid);cursor:pointer;transition:all .15s;}
+.date-main{font-size:14px;font-weight:600;color:var(--text);}
+.date-sub{font-size:10px;color:var(--light);}
+.today-btn{padding:4px 11px;border:1px solid var(--border);border-radius:14px;background:none;font-family:'DM Sans',sans-serif;font-size:11px;font-weight:500;color:var(--mid);cursor:pointer;transition:all .15s;}
 .today-btn.active{background:var(--gold);border-color:var(--gold);color:var(--ink);font-weight:600;}
-.today-btn:hover:not(.active){border-color:var(--gold-dim);color:var(--gold-dim);}
 .date-input-wrap{position:relative;}
 .date-input-wrap input[type=date]{opacity:0;position:absolute;inset:0;cursor:pointer;width:100%;}
-.date-picker-btn{padding:5px 10px;border:1px solid var(--border);border-radius:8px;background:none;font-size:12px;color:var(--mid);cursor:pointer;}
+.date-picker-btn{padding:4px 9px;border:1px solid var(--border);border-radius:7px;background:none;font-size:11px;color:var(--mid);cursor:pointer;}
+
+/* QUICK CAPTURE */
+.quick-bar{background:white;border-bottom:2px solid var(--gold);padding:10px 16px;display:flex;gap:8px;align-items:center;}
+.quick-input{flex:1;padding:9px 12px;border:1.5px solid var(--border);border-radius:8px;font-family:'DM Sans',sans-serif;font-size:13px;color:var(--text);outline:none;transition:border-color .15s;}
+.quick-input:focus{border-color:var(--gold);}
+.quick-input::placeholder{color:var(--light);}
+.quick-type{padding:8px 10px;border:1.5px solid var(--border);border-radius:8px;font-family:'DM Sans',sans-serif;font-size:12px;color:var(--text);outline:none;background:white;cursor:pointer;}
+.quick-type:focus{border-color:var(--gold);}
+.quick-btn{padding:8px 14px;background:var(--ink);border:none;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;color:white;cursor:pointer;white-space:nowrap;transition:background .15s;}
+.quick-btn:hover{background:var(--ink2);}
+.quick-hint{font-size:10px;color:var(--light);}
 
 /* NAV TABS */
-.nav-tabs{display:flex;gap:2px;padding:0 20px;background:white;border-bottom:1px solid var(--border);overflow-x:auto;}
-.nav-tab{padding:10px 14px;border:none;background:none;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:500;color:var(--mid);cursor:pointer;white-space:nowrap;border-bottom:2px solid transparent;margin-bottom:-1px;transition:all .15s;}
+.nav-tabs{display:flex;gap:0;padding:0 16px;background:white;border-bottom:1px solid var(--border);overflow-x:auto;}
+.nav-tab{padding:9px 13px;border:none;background:none;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:500;color:var(--mid);cursor:pointer;white-space:nowrap;border-bottom:2px solid transparent;margin-bottom:-1px;transition:all .15s;}
 .nav-tab.active{color:var(--ink);font-weight:600;border-bottom-color:var(--gold);}
-.nav-tab:hover:not(.active){color:var(--text);}
-.nav-tab .tab-count{display:inline-flex;align-items:center;justify-content:center;width:16px;height:16px;border-radius:50%;background:var(--stone);font-size:9px;font-weight:700;margin-left:5px;}
+.tab-count{display:inline-flex;align-items:center;justify-content:center;width:15px;height:15px;border-radius:50%;background:var(--stone);font-size:9px;font-weight:700;margin-left:4px;}
 .nav-tab.active .tab-count{background:var(--gold);color:var(--ink);}
 
-/* MAIN WRAP */
-.wrap{max-width:900px;margin:0 auto;padding:16px 16px 80px;}
+/* WRAP */
+.wrap{max-width:860px;margin:0 auto;padding:14px 14px 80px;}
+
+/* MORNING BRIEF */
+.brief-card{background:var(--ink2);border-radius:var(--r);padding:14px 16px;margin-bottom:14px;position:relative;overflow:hidden;cursor:pointer;}
+.brief-card::before{content:'';position:absolute;right:-20px;top:-20px;width:90px;height:90px;border-radius:50%;border:20px solid rgba(201,168,76,.07);}
+.brief-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;}
+.brief-label{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--gold);}
+.brief-toggle{font-size:10px;color:rgba(255,255,255,.3);cursor:pointer;}
+.brief-text{font-size:12px;color:rgba(255,255,255,.75);line-height:1.65;position:relative;z-index:1;}
+.brief-text strong{color:white;}
+.brief-bullets{list-style:none;display:flex;flex-direction:column;gap:4px;position:relative;z-index:1;}
+.brief-bullets li{font-size:12px;color:rgba(255,255,255,.7);line-height:1.5;padding-left:14px;position:relative;}
+.brief-bullets li::before{content:'·';position:absolute;left:4px;color:var(--gold);}
+.brief-bullets li strong{color:white;}
 
 /* DAY SUMMARY */
-.day-summary{display:flex;gap:10px;margin-bottom:16px;}
-.ds-card{flex:1;background:white;border:1px solid var(--border);border-radius:var(--r);padding:12px;text-align:center;}
-.ds-val{font-family:'DM Serif Display',serif;font-size:24px;color:var(--text);}
-.ds-label{font-size:10px;color:var(--light);text-transform:uppercase;letter-spacing:.06em;margin-top:2px;}
-.ds-card.highlight{background:var(--ink);border-color:var(--ink);}
-.ds-card.highlight .ds-val{color:var(--gold);}
-.ds-card.highlight .ds-label{color:rgba(255,255,255,.4);}
+.day-summary{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:12px;}
+.ds-card{background:white;border:1px solid var(--border);border-radius:8px;padding:10px;text-align:center;}
+.ds-val{font-family:'DM Serif Display',serif;font-size:22px;color:var(--text);}
+.ds-label{font-size:9px;color:var(--light);text-transform:uppercase;letter-spacing:.06em;margin-top:1px;}
+.ds-card.hl{background:var(--ink);border-color:var(--ink);}
+.ds-card.hl .ds-val{color:var(--gold);}
+.ds-card.hl .ds-label{color:rgba(255,255,255,.4);}
+.ds-card.red-hl .ds-val{color:var(--red);}
 
 /* PROGRESS */
-.prog-wrap{background:white;border:1px solid var(--border);border-radius:var(--r);padding:12px 16px;margin-bottom:14px;display:flex;align-items:center;gap:12px;}
-.prog-label{font-size:11px;color:var(--mid);}
+.prog-wrap{background:white;border:1px solid var(--border);border-radius:var(--r);padding:10px 14px;margin-bottom:12px;display:flex;align-items:center;gap:10px;}
+.prog-label{font-size:11px;color:var(--mid);flex-shrink:0;}
 .prog-bar{flex:1;height:6px;background:var(--stone);border-radius:3px;overflow:hidden;}
 .prog-fill{height:100%;background:linear-gradient(90deg,var(--gold),#E8B84B);border-radius:3px;transition:width .4s;}
-.prog-pct{font-size:11px;font-weight:600;color:var(--gold-dim);min-width:30px;text-align:right;}
+.prog-pct{font-size:11px;font-weight:600;color:var(--gold-dim);min-width:28px;text-align:right;}
 
 /* SECTION */
-.section{margin-bottom:14px;}
-.section-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;}
-.section-title{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--mid);display:flex;align-items:center;gap:7px;}
-.stitle-dot{width:6px;height:6px;border-radius:50%;}
-.add-btn{padding:4px 12px;border:1px solid var(--border);background:white;border-radius:16px;font-family:'DM Sans',sans-serif;font-size:11px;font-weight:500;color:var(--mid);cursor:pointer;transition:all .15s;}
+.section{margin-bottom:12px;}
+.section-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:7px;}
+.section-title{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--mid);display:flex;align-items:center;gap:6px;}
+.s-dot{width:6px;height:6px;border-radius:50%;}
+.add-btn{padding:3px 10px;border:1px solid var(--border);background:white;border-radius:14px;font-family:'DM Sans',sans-serif;font-size:11px;font-weight:500;color:var(--mid);cursor:pointer;transition:all .15s;}
 .add-btn:hover{border-color:var(--gold-dim);color:var(--gold-dim);}
 
 /* TASK CARD */
-.task-card{background:white;border:1px solid var(--border);border-radius:var(--r);margin-bottom:6px;overflow:hidden;transition:box-shadow .15s;}
-.task-card:hover{box-shadow:0 2px 12px rgba(0,0,0,.07);}
-.task-card.done-card{opacity:.5;}
-.task-inner{padding:12px 14px;}
-.task-top{display:flex;align-items:flex-start;gap:10px;}
-.task-check{width:18px;height:18px;border-radius:5px;border:2px solid var(--border);flex-shrink:0;margin-top:1px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;}
+.task-card{background:white;border:1px solid var(--border);border-radius:var(--r);margin-bottom:5px;overflow:hidden;transition:box-shadow .15s;}
+.task-card:hover{box-shadow:0 2px 10px rgba(0,0,0,.07);}
+.task-card.done-card{opacity:.45;}
+.task-card.waiting-card{border-left:3px solid var(--waiting);}
+.task-inner{padding:11px 12px;}
+.task-top{display:flex;align-items:flex-start;gap:9px;}
+.task-check{width:17px;height:17px;border-radius:5px;border:2px solid var(--border);flex-shrink:0;margin-top:1px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;}
 .task-check.checked{background:var(--green);border-color:var(--green);}
-.task-check.checked::after{content:'✓';font-size:10px;color:white;font-weight:700;}
+.task-check.checked::after{content:'✓';font-size:9px;color:white;font-weight:700;}
+.task-check.waiting-check{background:var(--waiting-bg);border-color:var(--waiting);}
+.task-check.waiting-check::after{content:'⏳';font-size:8px;}
 .task-body{flex:1;min-width:0;}
 .task-title{font-size:13px;font-weight:500;color:var(--text);line-height:1.4;}
-.task-title.strikethrough{text-decoration:line-through;color:var(--light);}
-.task-meta{display:flex;align-items:center;gap:6px;margin-top:5px;flex-wrap:wrap;}
-.badge{font-size:10px;font-weight:600;padding:2px 7px;border-radius:8px;white-space:nowrap;}
-.badge-critical{background:var(--red-bg);color:var(--red);}
-.badge-high{background:var(--amber-bg);color:var(--amber);}
-.badge-medium{background:var(--blue-bg);color:var(--blue);}
-.badge-watch{background:var(--stone);color:var(--mid);}
-.badge-client{background:var(--green-bg);color:var(--green);}
-.badge-product{background:#EEF2FF;color:#3730A3;}
-.badge-tech{background:#EFF6FF;color:#1D4ED8;}
-.badge-leadership{background:var(--ink2);color:var(--gold);}
-.badge-cst{background:#F0FDF4;color:#166534;}
-.badge-finance{background:#FFF7ED;color:#9A3412;}
-.badge-other{background:var(--stone);color:var(--mid);}
-.badge-carried{background:var(--gold-bg);color:var(--gold-dim);border:1px solid var(--gold);}
-.badge-spilled{background:#FEF3C7;color:#92400E;}
-.task-note{font-size:11px;color:var(--mid);margin-top:6px;padding:7px 9px;background:var(--stone);border-radius:6px;line-height:1.5;cursor:pointer;}
-.task-note-add{font-size:11px;color:var(--light);margin-top:5px;cursor:pointer;font-style:italic;}
-.task-actions{display:flex;gap:4px;flex-shrink:0;margin-top:1px;}
-.ta-btn{padding:4px 8px;border:1px solid var(--border);border-radius:6px;background:none;font-family:'DM Sans',sans-serif;font-size:10px;font-weight:500;color:var(--mid);cursor:pointer;white-space:nowrap;transition:all .15s;}
+.task-title.struck{text-decoration:line-through;color:var(--light);}
+.task-meta{display:flex;align-items:center;gap:5px;margin-top:4px;flex-wrap:wrap;}
+.badge{font-size:10px;font-weight:600;padding:2px 6px;border-radius:7px;white-space:nowrap;}
+.b-critical{background:var(--red-bg);color:var(--red);}
+.b-high{background:var(--amber-bg);color:var(--amber);}
+.b-medium{background:var(--blue-bg);color:var(--blue);}
+.b-watch{background:var(--stone);color:var(--mid);}
+.b-waiting{background:var(--waiting-bg);color:var(--waiting);}
+.b-carried{background:var(--gold-bg);color:var(--gold-dim);border:1px solid rgba(201,168,76,.4);}
+.b-spilled{background:#FEF3C7;color:#92400E;}
+.b-client{background:var(--green-bg);color:var(--green);}
+.b-product{background:#EEF2FF;color:#3730A3;}
+.b-tech{background:#EFF6FF;color:#1D4ED8;}
+.b-leadership{background:var(--ink2);color:var(--gold);}
+.b-cst{background:#F0FDF4;color:#166534;}
+.b-finance{background:#FFF7ED;color:#9A3412;}
+.b-other{background:var(--stone);color:var(--mid);}
+.task-note{font-size:11px;color:var(--mid);margin-top:5px;padding:6px 8px;background:var(--stone);border-radius:5px;line-height:1.5;cursor:pointer;}
+.task-note:hover{background:#E8E4DC;}
+.task-note-add{font-size:11px;color:var(--light);margin-top:4px;cursor:pointer;font-style:italic;}
+.task-actions{display:flex;gap:3px;flex-shrink:0;}
+.ta-btn{padding:3px 7px;border:1px solid var(--border);border-radius:5px;background:none;font-family:'DM Sans',sans-serif;font-size:10px;font-weight:500;color:var(--mid);cursor:pointer;white-space:nowrap;transition:all .15s;}
 .ta-btn:hover{border-color:var(--gold-dim);color:var(--gold-dim);}
+.ta-btn.wait-btn{color:var(--waiting);}
+.ta-btn.wait-btn:hover{border-color:var(--waiting);background:var(--waiting-bg);}
 .ta-btn.del:hover{border-color:var(--red);color:var(--red);}
-.spill-row{padding:8px 14px 10px 42px;border-top:1px solid var(--stone);background:var(--stone);display:flex;align-items:center;gap:8px;}
+.spill-row{padding:7px 12px 9px 38px;border-top:1px solid var(--stone);background:var(--stone);display:flex;align-items:center;gap:7px;flex-wrap:wrap;}
 .spill-row label{font-size:11px;color:var(--mid);}
-.spill-row input[type=date]{padding:4px 8px;border:1px solid var(--border);border-radius:6px;font-family:'DM Sans',sans-serif;font-size:11px;color:var(--text);outline:none;background:white;}
-.spill-row button{padding:4px 10px;border:none;border-radius:6px;font-family:'DM Sans',sans-serif;font-size:11px;font-weight:600;cursor:pointer;}
-.spill-confirm{background:var(--ink);color:white;}
-.spill-cancel{background:none;border:1px solid var(--border)!important;color:var(--mid);}
+.spill-row input[type=date]{padding:3px 7px;border:1px solid var(--border);border-radius:5px;font-family:'DM Sans',sans-serif;font-size:11px;outline:none;background:white;}
+.spill-confirm{padding:3px 9px;background:var(--ink);color:white;border:none;border-radius:5px;font-family:'DM Sans',sans-serif;font-size:11px;font-weight:600;cursor:pointer;}
+.spill-cancel{padding:3px 7px;background:none;border:1px solid var(--border);border-radius:5px;font-family:'DM Sans',sans-serif;font-size:11px;cursor:pointer;color:var(--mid);}
+
+/* DONE HISTORY */
+.done-history-toggle{padding:8px 12px;font-size:11px;color:var(--light);cursor:pointer;text-align:center;background:var(--stone);border-radius:var(--r);margin-top:5px;transition:background .15s;}
+.done-history-toggle:hover{background:var(--border);}
+.done-history-wrap{display:none;margin-top:5px;}
 
 /* DEAL / WATCH CARD */
-.dw-card{background:white;border:1px solid var(--border);border-radius:var(--r);margin-bottom:6px;overflow:hidden;}
-.dw-inner{padding:12px 14px;display:flex;align-items:flex-start;gap:10px;}
+.dw-card{background:white;border:1px solid var(--border);border-radius:var(--r);margin-bottom:5px;overflow:hidden;}
+.dw-card.done-card{opacity:.45;}
+.dw-card.waiting-card{border-left:3px solid var(--waiting);}
+.dw-inner{padding:11px 12px;display:flex;align-items:flex-start;gap:9px;}
 .dw-body{flex:1;min-width:0;}
 .dw-title{font-size:13px;font-weight:600;color:var(--text);}
 .dw-detail{font-size:11px;color:var(--mid);margin-top:2px;line-height:1.5;}
 .dw-action{font-size:11px;color:var(--blue);margin-top:3px;}
-.dw-right{display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex-shrink:0;}
+.dw-right{display:flex;flex-direction:column;align-items:flex-end;gap:3px;flex-shrink:0;}
 .dw-mrr{font-size:12px;font-weight:600;color:var(--green);}
 .dw-date{font-size:10px;color:var(--light);}
-.dw-actions{display:flex;gap:4px;margin-top:4px;}
+.dw-acts{display:flex;gap:3px;margin-top:3px;}
+
+/* WEEK HEATMAP */
+.week-heatmap{background:white;border:1px solid var(--border);border-radius:var(--r);padding:12px 14px;margin-bottom:14px;}
+.wh-title{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--mid);margin-bottom:10px;}
+.wh-days{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;}
+.wh-day{text-align:center;cursor:pointer;}
+.wh-day-label{font-size:9px;color:var(--light);text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px;}
+.wh-bar-wrap{height:40px;display:flex;align-items:flex-end;justify-content:center;}
+.wh-bar{width:20px;border-radius:3px 3px 0 0;min-height:4px;transition:all .2s;}
+.wh-count{font-size:9px;font-weight:600;margin-top:3px;}
+.wh-day.today-col .wh-day-label{color:var(--gold-dim);font-weight:700;}
+.wh-day.today-col .wh-bar{opacity:1;}
 
 /* WEEK VIEW */
-.week-day{margin-bottom:16px;}
-.week-day-hdr{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.09em;color:var(--mid);margin-bottom:8px;padding-bottom:6px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.week-day{margin-bottom:14px;}
+.week-day-hdr{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--mid);margin-bottom:7px;padding-bottom:5px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
 .week-day-hdr.today-hdr{color:var(--gold-dim);}
 
-/* PRIORITY TAB */
-.open-closed-tabs{display:flex;gap:4px;margin-bottom:10px;}
-.oc-tab{padding:5px 14px;border:1px solid var(--border);border-radius:16px;background:none;font-family:'DM Sans',sans-serif;font-size:11px;font-weight:500;color:var(--mid);cursor:pointer;transition:all .15s;}
+/* OPEN/CLOSED TABS */
+.oc-tabs{display:flex;gap:4px;margin-bottom:10px;}
+.oc-tab{padding:4px 13px;border:1px solid var(--border);border-radius:14px;background:none;font-family:'DM Sans',sans-serif;font-size:11px;font-weight:500;color:var(--mid);cursor:pointer;transition:all .15s;}
 .oc-tab.active{background:var(--ink);border-color:var(--ink);color:white;font-weight:600;}
 
 /* STRAT / NARRATIVE */
-.strat-card{background:var(--ink2);border-radius:var(--r);padding:18px;color:white;position:relative;overflow:hidden;margin-bottom:14px;}
-.strat-card::before{content:'';position:absolute;right:-20px;top:-20px;width:100px;height:100px;border-radius:50%;border:25px solid rgba(201,168,76,.08);}
-.strat-label{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.1em;color:var(--gold);margin-bottom:6px;position:relative;z-index:1;}
-.strat-time-val{font-family:'DM Serif Display',serif;font-size:18px;color:white;margin-bottom:12px;position:relative;z-index:1;}
-.strat-controls{display:flex;align-items:center;gap:8px;flex-wrap:wrap;position:relative;z-index:1;}
-.strat-controls select,.strat-controls input[type=time]{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);border-radius:6px;padding:5px 8px;font-family:'DM Sans',sans-serif;font-size:11px;color:white;outline:none;}
-.strat-controls input[type=time]::-webkit-calendar-picker-indicator{filter:invert(.6);}
-.strat-notes{width:100%;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:7px;padding:10px;font-family:'DM Sans',sans-serif;font-size:12px;color:white;resize:none;min-height:60px;line-height:1.6;outline:none;margin:10px 0;position:relative;z-index:1;}
+.strat-card{background:var(--ink2);border-radius:var(--r);padding:16px;color:white;position:relative;overflow:hidden;margin-bottom:12px;}
+.strat-card::before{content:'';position:absolute;right:-15px;top:-15px;width:80px;height:80px;border-radius:50%;border:20px solid rgba(201,168,76,.07);}
+.strat-label{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--gold);margin-bottom:5px;position:relative;z-index:1;}
+.strat-time-val{font-family:'DM Serif Display',serif;font-size:16px;color:white;margin-bottom:10px;position:relative;z-index:1;}
+.strat-notes{width:100%;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:6px;padding:9px;font-family:'DM Sans',sans-serif;font-size:12px;color:white;resize:none;min-height:55px;line-height:1.6;outline:none;margin:8px 0;position:relative;z-index:1;}
 .strat-notes::placeholder{color:rgba(255,255,255,.25);}
-.strat-save{padding:6px 14px;background:var(--gold);border:none;border-radius:6px;font-family:'DM Sans',sans-serif;font-size:11px;font-weight:600;color:var(--ink);cursor:pointer;}
-
-.narrative-card{background:white;border:1px solid var(--border);border-radius:var(--r);overflow:hidden;margin-bottom:14px;}
-.narrative-hdr{padding:12px 16px;border-bottom:1px solid var(--stone);display:flex;align-items:center;justify-content:space-between;}
-.narrative-title{font-size:12px;font-weight:600;color:var(--text);}
-.narrative-week{font-size:11px;color:var(--light);}
-.narrative-body textarea{width:100%;padding:12px 16px;border:none;outline:none;font-family:'DM Sans',sans-serif;font-size:13px;line-height:1.75;color:var(--text);resize:none;min-height:100px;}
+.strat-controls{display:flex;align-items:center;gap:7px;flex-wrap:wrap;position:relative;z-index:1;}
+.strat-controls select,.strat-controls input[type=time]{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);border-radius:6px;padding:4px 7px;font-family:'DM Sans',sans-serif;font-size:11px;color:white;outline:none;}
+.strat-controls input[type=time]::-webkit-calendar-picker-indicator{filter:invert(.6);}
+.strat-save{padding:5px 12px;background:var(--gold);border:none;border-radius:6px;font-family:'DM Sans',sans-serif;font-size:11px;font-weight:600;color:var(--ink);cursor:pointer;}
+.narrative-card{background:white;border:1px solid var(--border);border-radius:var(--r);overflow:hidden;margin-bottom:12px;}
+.narrative-hdr{padding:11px 14px;border-bottom:1px solid var(--stone);display:flex;align-items:center;justify-content:space-between;}
+.narrative-title{font-size:12px;font-weight:600;}
+.narrative-week{font-size:10px;color:var(--light);}
+.narrative-body textarea{width:100%;padding:11px 14px;border:none;outline:none;font-family:'DM Sans',sans-serif;font-size:13px;line-height:1.75;color:var(--text);resize:none;min-height:95px;}
 .narrative-body textarea::placeholder{color:var(--light);}
-.narrative-footer{padding:8px 16px;border-top:1px solid var(--stone);display:flex;align-items:center;justify-content:space-between;}
+.narrative-footer{padding:7px 14px;border-top:1px solid var(--stone);display:flex;align-items:center;justify-content:space-between;}
 .narrative-hint{font-size:10px;color:var(--light);}
-.copy-btn{padding:5px 12px;background:var(--ink);border:none;border-radius:6px;font-family:'DM Sans',sans-serif;font-size:11px;font-weight:600;color:white;cursor:pointer;}
+.copy-btn{padding:4px 11px;background:var(--ink);border:none;border-radius:6px;font-family:'DM Sans',sans-serif;font-size:11px;font-weight:600;color:white;cursor:pointer;}
 
 /* EMPTY */
-.empty{padding:24px 14px;text-align:center;font-size:12px;color:var(--light);font-style:italic;}
+.empty{padding:20px;text-align:center;font-size:12px;color:var(--light);font-style:italic;}
 
 /* MODAL */
 .modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:200;display:none;align-items:flex-end;justify-content:center;}
 .modal-bg.open{display:flex;}
 @media(min-width:600px){.modal-bg{align-items:center;}}
-.modal{background:white;border-radius:16px 16px 0 0;width:100%;max-width:520px;padding:22px 20px 30px;animation:slideUp .2s ease;max-height:90vh;overflow-y:auto;}
-@media(min-width:600px){.modal{border-radius:16px;}}
-@keyframes slideUp{from{transform:translateY(24px);opacity:0}to{transform:translateY(0);opacity:1}}
-.modal-title{font-family:'DM Serif Display',serif;font-size:18px;margin-bottom:16px;}
-.f-row{margin-bottom:12px;}
-.f-row label{display:block;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--mid);margin-bottom:5px;}
-.f-row input,.f-row select,.f-row textarea{width:100%;padding:9px 12px;border:1.5px solid var(--border);border-radius:8px;font-family:'DM Sans',sans-serif;font-size:13px;color:var(--text);outline:none;transition:border-color .15s;background:white;}
+.modal{background:white;border-radius:14px 14px 0 0;width:100%;max-width:500px;padding:20px 18px 28px;animation:slideUp .2s ease;max-height:90vh;overflow-y:auto;}
+@media(min-width:600px){.modal{border-radius:14px;}}
+@keyframes slideUp{from{transform:translateY(20px);opacity:0}to{transform:translateY(0);opacity:1}}
+.modal-title{font-family:'DM Serif Display',serif;font-size:17px;margin-bottom:14px;}
+.f-row{margin-bottom:10px;}
+.f-row label{display:block;font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--mid);margin-bottom:4px;}
+.f-row input,.f-row select,.f-row textarea{width:100%;padding:9px 11px;border:1.5px solid var(--border);border-radius:7px;font-family:'DM Sans',sans-serif;font-size:13px;color:var(--text);outline:none;transition:border-color .15s;background:white;}
 .f-row input:focus,.f-row select:focus,.f-row textarea:focus{border-color:var(--gold);}
-.f-row textarea{resize:vertical;min-height:65px;line-height:1.6;}
+.f-row textarea{resize:vertical;min-height:60px;line-height:1.6;}
 .f-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
-.modal-btns{display:flex;gap:8px;margin-top:16px;}
-.btn-cancel{flex:1;padding:10px;border:1.5px solid var(--border);background:white;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;color:var(--mid);cursor:pointer;}
-.btn-save{flex:2;padding:10px;border:none;background:var(--ink);border-radius:8px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;color:white;cursor:pointer;}
+.modal-btns{display:flex;gap:7px;margin-top:14px;}
+.btn-cancel{flex:1;padding:9px;border:1.5px solid var(--border);background:white;border-radius:7px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;color:var(--mid);cursor:pointer;}
+.btn-save{flex:2;padding:9px;border:none;background:var(--ink);border-radius:7px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;color:white;cursor:pointer;}
 
 /* TOAST */
-.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(60px);background:var(--ink);color:white;padding:8px 16px;border-radius:20px;font-size:12px;font-weight:500;z-index:300;transition:transform .2s;pointer-events:none;}
+.toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%) translateY(50px);background:var(--ink);color:white;padding:7px 15px;border-radius:18px;font-size:12px;font-weight:500;z-index:300;transition:transform .2s;pointer-events:none;}
 .toast.show{transform:translateX(-50%) translateY(0);}
 
-::-webkit-scrollbar{width:4px;}
-::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px;}
-@media(max-width:580px){.f-grid{grid-template-columns:1fr;}.day-summary{flex-wrap:wrap;}.ds-card{min-width:calc(50% - 5px);}}
+::-webkit-scrollbar{width:3px;}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px;}
+@media(max-width:560px){
+  .f-grid{grid-template-columns:1fr;}
+  .day-summary{grid-template-columns:repeat(3,1fr);}
+  .day-summary .ds-card:nth-child(4),.day-summary .ds-card:nth-child(5){display:none;}
+}
 </style>
 </head>
 <body>
 
+<!-- HEADER -->
 <header class="hdr">
-  <div class="hdr-title"><em>AVP</em> Command Layer</div>
-  <div style="font-size:11px;color:rgba(255,255,255,.35);" id="hdr-time"></div>
+  <div class="hdr-left">
+    <div class="hdr-title"><em>AVP</em> Command Layer</div>
+    <div class="hdr-strat" id="hdr-strat-badge" onclick="switchTab('more')" style="display:none;"></div>
+  </div>
+  <div class="hdr-time" id="hdr-time"></div>
 </header>
 
-<!-- DATE NAVIGATOR -->
+<!-- QUICK CAPTURE BAR -->
+<div class="quick-bar">
+  <input class="quick-input" id="quick-input" type="text" placeholder="Quick capture — type and press Enter to add to today's list...">
+  <select class="quick-type" id="quick-type">
+    <option value="client">Client</option>
+    <option value="product">Product</option>
+    <option value="tech">Tech</option>
+    <option value="leadership">Leadership</option>
+    <option value="cst">CST</option>
+    <option value="finance">Finance</option>
+    <option value="other">Other</option>
+  </select>
+  <button class="quick-btn" onclick="quickCapture()">+ Add</button>
+</div>
+
+<!-- DATE NAV -->
 <div class="date-nav">
   <button class="date-arrow" onclick="shiftDate(-1)">←</button>
   <div class="date-display">
@@ -224,33 +299,35 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--text);
 
   <!-- DAY VIEW -->
   <div id="view-day">
-    <div class="day-summary">
-      <div class="ds-card highlight">
-        <div class="ds-val" id="ds-open">0</div>
-        <div class="ds-label">Open</div>
+    <!-- Morning brief -->
+    <div class="brief-card" id="brief-card">
+      <div class="brief-header">
+        <div class="brief-label">Today's Brief</div>
+        <div class="brief-toggle" id="brief-toggle" onclick="toggleBrief()">hide ▲</div>
       </div>
-      <div class="ds-card">
-        <div class="ds-val" id="ds-done">0</div>
-        <div class="ds-label">Done</div>
-      </div>
-      <div class="ds-card">
-        <div class="ds-val" id="ds-carried">0</div>
-        <div class="ds-label">Carried Fwd</div>
-      </div>
-      <div class="ds-card">
-        <div class="ds-val" id="ds-critical">0</div>
-        <div class="ds-label">Critical</div>
+      <div id="brief-body">
+        <ul class="brief-bullets" id="brief-bullets"></ul>
       </div>
     </div>
+
+    <!-- Stats -->
+    <div class="day-summary">
+      <div class="ds-card hl"><div class="ds-val" id="ds-open">0</div><div class="ds-label">Open</div></div>
+      <div class="ds-card"><div class="ds-val" id="ds-done">0</div><div class="ds-label">Done</div></div>
+      <div class="ds-card"><div class="ds-val" id="ds-waiting">0</div><div class="ds-label">Waiting</div></div>
+      <div class="ds-card"><div class="ds-val" id="ds-carried">0</div><div class="ds-label">Carried</div></div>
+      <div class="ds-card red-hl"><div class="ds-val" id="ds-critical">0</div><div class="ds-label">Critical</div></div>
+    </div>
+
     <div class="prog-wrap">
-      <div class="prog-label">Day Progress</div>
+      <div class="prog-label">Progress</div>
       <div class="prog-bar"><div class="prog-fill" id="prog-fill" style="width:0%"></div></div>
       <div class="prog-pct" id="prog-pct">0%</div>
     </div>
 
     <div class="section">
       <div class="section-hdr">
-        <div class="section-title"><div class="stitle-dot" style="background:var(--gold)"></div>Focus Items</div>
+        <div class="section-title"><div class="s-dot" style="background:var(--gold)"></div>Focus Items</div>
         <button class="add-btn" onclick="openAddTask()">+ Add Task</button>
       </div>
       <div id="day-tasks"></div>
@@ -258,7 +335,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--text);
 
     <div class="section">
       <div class="section-hdr">
-        <div class="section-title"><div class="stitle-dot" style="background:var(--amber)"></div>Deals — My Push Needed</div>
+        <div class="section-title"><div class="s-dot" style="background:var(--amber)"></div>Deals — My Push Needed</div>
         <button class="add-btn" onclick="openAddDeal()">+ Add Deal</button>
       </div>
       <div id="day-deals"></div>
@@ -266,7 +343,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--text);
 
     <div class="section">
       <div class="section-hdr">
-        <div class="section-title"><div class="stitle-dot" style="background:var(--blue)"></div>Team — Intervention Needed</div>
+        <div class="section-title"><div class="s-dot" style="background:var(--blue)"></div>Team — Intervention Needed</div>
         <button class="add-btn" onclick="openAddWatch()">+ Flag</button>
       </div>
       <div id="day-watch"></div>
@@ -275,33 +352,34 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--text);
 
   <!-- WEEK VIEW -->
   <div id="view-week" style="display:none;">
+    <div id="week-heatmap-wrap"></div>
     <div id="week-content"></div>
   </div>
 
   <!-- CRITICAL VIEW -->
   <div id="view-critical" style="display:none;">
-    <div class="open-closed-tabs">
+    <div class="oc-tabs">
       <button class="oc-tab active" id="crit-open-btn" onclick="setCritTab('open')">Open</button>
-      <button class="oc-tab" id="crit-closed-btn" onclick="setCritTab('closed')">Closed</button>
+      <button class="oc-tab" id="crit-closed-btn" onclick="setCritTab('closed')">Closed / Done</button>
     </div>
     <div id="critical-content"></div>
   </div>
 
   <!-- WATCHLIST VIEW -->
   <div id="view-watchlist" style="display:none;">
-    <div class="open-closed-tabs">
+    <div class="oc-tabs">
       <button class="oc-tab active" id="watch-open-btn" onclick="setWatchTab('open')">Open</button>
-      <button class="oc-tab" id="watch-closed-btn" onclick="setWatchTab('closed')">Closed</button>
+      <button class="oc-tab" id="watch-closed-btn" onclick="setWatchTab('closed')">Closed / Done</button>
     </div>
     <div id="watchlist-content"></div>
   </div>
 
-  <!-- PLANNER / MORE -->
+  <!-- PLANNER -->
   <div id="view-more" style="display:none;">
     <div class="strat-card">
       <div class="strat-label">Strategic Thinking Block</div>
       <div class="strat-time-val" id="strat-display">Not set — protect your thinking time</div>
-      <textarea class="strat-notes" id="strat-notes" rows="3" placeholder="What's the one thing I need to think about deeply this week?..."></textarea>
+      <textarea class="strat-notes" id="strat-notes" rows="3" placeholder="What needs deep thinking this week?..."></textarea>
       <div class="strat-controls">
         <select id="strat-day">
           <option value="">— Day —</option>
@@ -312,14 +390,13 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--text);
         <button class="strat-save" onclick="saveStrat()">Save Block</button>
       </div>
     </div>
-
     <div class="narrative-card">
       <div class="narrative-hdr">
         <div class="narrative-title">Weekly Narrative</div>
         <div class="narrative-week" id="narrative-week"></div>
       </div>
       <div class="narrative-body">
-        <textarea id="narrative-text" placeholder="What moved this week? What didn't? Where does next week need my attention?&#10;&#10;Write this Friday evening — 3-5 sentences is enough."></textarea>
+        <textarea id="narrative-text" placeholder="What moved this week? What didn't? Where does next week need my attention?"></textarea>
       </div>
       <div class="narrative-footer">
         <div class="narrative-hint" id="narrative-hint">Auto-saved</div>
@@ -330,51 +407,32 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--text);
 
 </div><!-- /wrap -->
 
-<!-- ADD TASK MODAL -->
+<!-- MODALS -->
 <div class="modal-bg" id="modal-task">
   <div class="modal">
     <div class="modal-title" id="task-modal-title">Add Task</div>
     <input type="hidden" id="task-edit-id">
-    <div class="f-row">
-      <label>What needs your attention? *</label>
-      <input type="text" id="t-text" placeholder="e.g. Follow up with Chheda's on DMS timeline">
-    </div>
+    <div class="f-row"><label>What needs your attention? *</label>
+      <input type="text" id="t-text" placeholder="e.g. Follow up with Chheda's on DMS timeline"></div>
     <div class="f-grid">
-      <div class="f-row">
-        <label>Category *</label>
+      <div class="f-row"><label>Category *</label>
         <select id="t-type" onchange="updateTaskTypeUI()">
-          <option value="client">Client</option>
-          <option value="product">Product</option>
-          <option value="tech">Tech</option>
-          <option value="leadership">Leadership</option>
-          <option value="cst">CST</option>
-          <option value="finance">Finance</option>
+          <option value="client">Client</option><option value="product">Product</option>
+          <option value="tech">Tech</option><option value="leadership">Leadership</option>
+          <option value="cst">CST</option><option value="finance">Finance</option>
           <option value="other">Other Team</option>
-        </select>
-      </div>
-      <div class="f-row">
-        <label>Priority *</label>
+        </select></div>
+      <div class="f-row"><label>Priority *</label>
         <select id="t-priority">
-          <option value="critical">🔴 Critical</option>
-          <option value="high" selected>🟡 High</option>
-          <option value="medium">🔵 Medium</option>
-          <option value="watch">👁 Keep an Eye</option>
-        </select>
-      </div>
+          <option value="critical">🔴 Critical</option><option value="high" selected>🟡 High</option>
+          <option value="medium">🔵 Medium</option><option value="watch">👁 Keep an Eye</option>
+        </select></div>
     </div>
-    <div class="f-row" id="t-client-row">
-      <label>Client Name</label>
-      <input type="text" id="t-client" placeholder="e.g. Chheda's Foods, Parle Products...">
-    </div>
+    <div class="f-row" id="t-client-row"><label>Client Name</label>
+      <input type="text" id="t-client" placeholder="e.g. Chheda's Foods"></div>
     <div class="f-grid">
-      <div class="f-row">
-        <label>Target Date *</label>
-        <input type="date" id="t-date">
-      </div>
-      <div class="f-row">
-        <label>Note (optional)</label>
-        <input type="text" id="t-note" placeholder="Context or detail...">
-      </div>
+      <div class="f-row"><label>Target Date *</label><input type="date" id="t-date"></div>
+      <div class="f-row"><label>Note (optional)</label><input type="text" id="t-note" placeholder="Context..."></div>
     </div>
     <div class="modal-btns">
       <button class="btn-cancel" onclick="closeModal('modal-task')">Cancel</button>
@@ -383,42 +441,22 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--text);
   </div>
 </div>
 
-<!-- ADD DEAL MODAL -->
 <div class="modal-bg" id="modal-deal">
   <div class="modal">
     <div class="modal-title">Deal Needing My Push</div>
     <input type="hidden" id="deal-edit-id">
-    <div class="f-row">
-      <label>Account *</label>
-      <input type="text" id="d-account" placeholder="e.g. Parle Products">
-    </div>
-    <div class="f-row">
-      <label>What's the situation?</label>
-      <input type="text" id="d-desc" placeholder="e.g. Proposal sent 12 days ago — no response">
-    </div>
-    <div class="f-row">
-      <label>My Action</label>
-      <input type="text" id="d-action" placeholder="e.g. Call VP Sales directly this week">
-    </div>
+    <div class="f-row"><label>Account *</label><input type="text" id="d-account" placeholder="e.g. Parle Products"></div>
+    <div class="f-row"><label>Situation</label><input type="text" id="d-desc" placeholder="e.g. Proposal sent 12 days ago — no response"></div>
+    <div class="f-row"><label>My Action</label><input type="text" id="d-action" placeholder="e.g. Call VP Sales directly"></div>
     <div class="f-grid">
-      <div class="f-row">
-        <label>Potential MRR (₹)</label>
-        <input type="text" id="d-mrr" placeholder="e.g. 85,000">
-      </div>
-      <div class="f-row">
-        <label>Priority</label>
+      <div class="f-row"><label>Potential MRR (₹)</label><input type="text" id="d-mrr" placeholder="e.g. 85,000"></div>
+      <div class="f-row"><label>Priority</label>
         <select id="d-priority">
-          <option value="critical">🔴 Critical</option>
-          <option value="high" selected>🟡 High</option>
-          <option value="medium">🔵 Medium</option>
-          <option value="watch">👁 Keep an Eye</option>
-        </select>
-      </div>
+          <option value="critical">🔴 Critical</option><option value="high" selected>🟡 High</option>
+          <option value="medium">🔵 Medium</option><option value="watch">👁 Keep an Eye</option>
+        </select></div>
     </div>
-    <div class="f-row">
-      <label>Planned Closure Date *</label>
-      <input type="date" id="d-date">
-    </div>
+    <div class="f-row"><label>Planned Closure Date *</label><input type="date" id="d-date"></div>
     <div class="modal-btns">
       <button class="btn-cancel" onclick="closeModal('modal-deal')">Cancel</button>
       <button class="btn-save" onclick="saveDeal()">Save Deal</button>
@@ -426,41 +464,24 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--text);
   </div>
 </div>
 
-<!-- ADD WATCH MODAL -->
 <div class="modal-bg" id="modal-watch">
   <div class="modal">
     <div class="modal-title">Flag for Intervention</div>
     <input type="hidden" id="watch-edit-id">
     <div class="f-grid">
-      <div class="f-row">
-        <label>Person *</label>
-        <input type="text" id="w-person" placeholder="Name">
-      </div>
-      <div class="f-row">
-        <label>Role</label>
-        <select id="w-role">
-          <option>CSM</option><option>AM</option><option>Both</option>
-        </select>
-      </div>
+      <div class="f-row"><label>Person *</label><input type="text" id="w-person" placeholder="Name"></div>
+      <div class="f-row"><label>Role</label>
+        <select id="w-role"><option>CSM</option><option>AM</option><option>Both</option></select></div>
     </div>
-    <div class="f-row">
-      <label>What needs my attention?</label>
-      <textarea id="w-flag" rows="2" placeholder="e.g. 3 accounts with overdue MBRs — needs senior check-in"></textarea>
-    </div>
+    <div class="f-row"><label>What needs my attention?</label>
+      <textarea id="w-flag" rows="2" placeholder="e.g. 3 accounts with overdue MBRs — senior check-in needed"></textarea></div>
     <div class="f-grid">
-      <div class="f-row">
-        <label>Priority</label>
+      <div class="f-row"><label>Priority</label>
         <select id="w-priority">
-          <option value="critical">🔴 Critical</option>
-          <option value="high" selected>🟡 High</option>
-          <option value="medium">🔵 Medium</option>
-          <option value="watch">👁 Keep an Eye</option>
-        </select>
-      </div>
-      <div class="f-row">
-        <label>Planned Follow-up Date *</label>
-        <input type="date" id="w-date">
-      </div>
+          <option value="critical">🔴 Critical</option><option value="high" selected>🟡 High</option>
+          <option value="medium">🔵 Medium</option><option value="watch">👁 Keep an Eye</option>
+        </select></div>
+      <div class="f-row"><label>Planned Follow-up Date *</label><input type="date" id="w-date"></div>
     </div>
     <div class="modal-btns">
       <button class="btn-cancel" onclick="closeModal('modal-watch')">Cancel</button>
@@ -469,14 +490,13 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--text);
   </div>
 </div>
 
-<!-- NOTE MODAL -->
 <div class="modal-bg" id="modal-note">
   <div class="modal">
     <div class="modal-title">Edit Note</div>
     <input type="hidden" id="note-item-id">
     <input type="hidden" id="note-item-type">
     <div class="f-row">
-      <textarea id="note-text" rows="4" placeholder="Add context, background, or what you need to do..."></textarea>
+      <textarea id="note-text" rows="4" placeholder="Context, background, what you need to do..."></textarea>
     </div>
     <div class="modal-btns">
       <button class="btn-cancel" onclick="closeModal('modal-note')">Cancel</button>
@@ -488,238 +508,329 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--text);
 <div class="toast" id="toast"></div>
 
 <script>
-// ════════════════════════════════════════
-// STATE
-// ════════════════════════════════════════
-const SK = 'avp_v3';
-let S = { tasks:[], deals:[], watch:[], strat:{day:'',time:'',notes:''}, narrative:{} };
-let viewDate = today();
-let currentTab = 'day';
-let critTab = 'open';
-let watchListTab = 'open';
-let spillingId = null;
+const SK='avp_v4';
+let S={tasks:[],deals:[],watch:[],strat:{day:'',time:'',notes:''},narrative:{}};
+let viewDate=today();
+let currentTab='day';
+let critTab='open';
+let watchListTab='open';
+let briefVisible=true;
 
-// ════════════════════════════════════════
-// DATE HELPERS
-// ════════════════════════════════════════
-function today() { return new Date().toISOString().split('T')[0]; }
-function isToday(d) { return d === today(); }
-function isPast(d) { return d < today(); }
-function fmt(d) {
-  if(!d) return '—';
-  const dt = new Date(d + 'T00:00:00');
+// ── DATE HELPERS ──
+function today(){return new Date().toISOString().split('T')[0];}
+function isToday(d){return d===today();}
+function fmt(d){
+  if(!d)return'—';
+  const dt=new Date(d+'T00:00:00');
   const days=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
   const months=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
   return days[dt.getDay()]+' '+dt.getDate()+' '+months[dt.getMonth()];
 }
-function fmtFull(d) {
-  if(!d) return '—';
-  const dt = new Date(d + 'T00:00:00');
+function fmtFull(d){
+  if(!d)return'—';
+  const dt=new Date(d+'T00:00:00');
   const days=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
   const months=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
   return days[dt.getDay()]+', '+dt.getDate()+' '+months[dt.getMonth()]+' '+dt.getFullYear();
 }
-function weekDays() {
-  const t = new Date(today()+'T00:00:00');
-  const mon = new Date(t); mon.setDate(t.getDate() - (t.getDay()||7) + 1);
-  return Array.from({length:7}, (_,i) => { const d=new Date(mon); d.setDate(mon.getDate()+i); return d.toISOString().split('T')[0]; });
+function weekDays(){
+  const t=new Date(today()+'T00:00:00');
+  const mon=new Date(t);mon.setDate(t.getDate()-(t.getDay()||7)+1);
+  return Array.from({length:7},(_,i)=>{const d=new Date(mon);d.setDate(mon.getDate()+i);return d.toISOString().split('T')[0];});
 }
-function getWeekKey() {
-  const d = new Date(); const mon = new Date(d);
-  mon.setDate(d.getDate() - (d.getDay()||7) + 1);
+function getWeekKey(){
+  const d=new Date();const mon=new Date(d);
+  mon.setDate(d.getDate()-(d.getDay()||7)+1);
   return mon.toISOString().split('T')[0];
 }
 
-// ════════════════════════════════════════
-// EFFECTIVE DATE — determines which day a task appears
-// ════════════════════════════════════════
-function effectiveDate(item) {
-  if(item.done) return item.targetDate; // done items stay on their original date
+// ── EFFECTIVE DATE ──
+function effectiveDate(item){
+  if(item.status==='done'||item.done) return item.targetDate;
   if(item.spilledDate) return item.spilledDate;
-  // Auto-carry: if targetDate is past and not done, show on today
-  if(item.targetDate < today()) return today();
+  if(item.targetDate<today()) return today(); // auto-carry
   return item.targetDate;
 }
-
-function isCarriedForward(item) {
-  if(item.done || item.spilledDate) return false;
-  return item.targetDate < today();
+function isCarriedForward(item){
+  if(item.status==='done'||item.done||item.spilledDate) return false;
+  return item.targetDate<today();
 }
+function isWaiting(item){return item.status==='waiting';}
+function isDone(item){return item.status==='done'||item.done;}
 
-// ════════════════════════════════════════
-// INIT
-// ════════════════════════════════════════
-function init() {
+// ── INIT ──
+function init(){
   load();
-  setInterval(() => {
-    const t = new Date();
-    document.getElementById('hdr-time').textContent =
-      t.toLocaleTimeString('en-IN', {hour:'2-digit',minute:'2-digit'});
-  }, 1000);
-  document.getElementById('t-date').value = today();
-  document.getElementById('d-date').value = today();
-  document.getElementById('w-date').value = today();
-  setupNarrativeAutoSave();
-  renderDateNav();
+  setInterval(()=>{
+    const t=new Date();
+    document.getElementById('hdr-time').textContent=
+      t.toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'});
+  },1000);
+  document.getElementById('t-date').value=today();
+  document.getElementById('d-date').value=today();
+  document.getElementById('w-date').value=today();
+  setupAutoSave();
   renderAll();
+  // Quick capture Enter key
+  document.getElementById('quick-input').addEventListener('keydown',e=>{
+    if(e.key==='Enter') quickCapture();
+  });
+  // Strategic block in header
+  updateStratBadge();
 }
 
-// ════════════════════════════════════════
-// DATE NAVIGATION
-// ════════════════════════════════════════
-function shiftDate(n) {
-  const d = new Date(viewDate+'T00:00:00');
-  d.setDate(d.getDate()+n);
-  viewDate = d.toISOString().split('T')[0];
-  renderDateNav(); renderAll();
+// ── QUICK CAPTURE ──
+function quickCapture(){
+  const text=document.getElementById('quick-input').value.trim();
+  if(!text)return;
+  const type=document.getElementById('quick-type').value;
+  S.tasks.push({
+    id:uid(), text, type,
+    priority:'high',
+    clientName:'',
+    targetDate:today(),
+    note:'', status:'open',
+    createdDate:today()
+  });
+  document.getElementById('quick-input').value='';
+  save(); renderAll();
+  showToast('↩ Added to today');
 }
-function goToDate(val) { if(val){viewDate=val; renderDateNav(); renderAll();} }
-function goToToday() { viewDate=today(); renderDateNav(); renderAll(); }
-function renderDateNav() {
-  document.getElementById('date-main').textContent = fmtFull(viewDate);
-  const diff = Math.round((new Date(viewDate+'T00:00:00') - new Date(today()+'T00:00:00'))/86400000);
-  document.getElementById('date-sub').textContent =
+
+// ── MORNING BRIEF ──
+function buildBrief(){
+  const bullets=[];
+  const t=today();
+  const allItems=[...S.tasks,...S.deals,...S.watch];
+
+  // Carried forward count
+  const carried=allItems.filter(i=>isCarriedForward(i));
+  if(carried.length>0)
+    bullets.push(`<strong>${carried.length} item${carried.length>1?'s':''}</strong> carried forward from previous days`);
+
+  // Critical open items for today
+  const critToday=allItems.filter(i=>effectiveDate(i)===t&&i.priority==='critical'&&!isDone(i)&&!isWaiting(i));
+  if(critToday.length>0)
+    bullets.push(`<strong>${critToday.length} critical</strong> item${critToday.length>1?'s':''} need your attention today`);
+
+  // Overdue deals
+  const overdueDeals=S.deals.filter(i=>!isDone(i)&&!isWaiting(i)&&i.targetDate&&i.targetDate<t);
+  if(overdueDeals.length>0)
+    bullets.push(`<strong>${overdueDeals.length} deal${overdueDeals.length>1?'s':''}</strong> past planned closure date — push needed`);
+
+  // Flagged team members pending for 3+ days
+  const staleFlaggedDays=3;
+  const staleFlags=S.watch.filter(w=>{if(!isDone(w)&&!isWaiting(w)&&w.createdDate){const daysOpen=Math.floor((new Date(t+'T00:00:00')-new Date(w.createdDate+'T00:00:00'))/86400000);return daysOpen>=staleFlaggedDays;}return false;});
+  if(staleFlags.length>0)
+    bullets.push(`<strong>${staleFlags.length} team flag${staleFlags.length>1?'s':''}</strong> open for ${staleFlaggedDays}+ days without closure`);
+
+  // Waiting items
+  const waiting=allItems.filter(i=>isWaiting(i));
+  if(waiting.length>0)
+    bullets.push(`<strong>${waiting.length} item${waiting.length>1?'s':''}</strong> waiting on others — check if response received`);
+
+  // Strategic block reminder
+  const strat=S.strat;
+  if(strat.day&&strat.time)
+    bullets.push(`Strategic block: <strong>${strat.day} · ${strat.time}</strong>`);
+
+  if(bullets.length===0)
+    bullets.push('All clear — no flags, no carry-forwards. Good day to get ahead.');
+
+  const ul=document.getElementById('brief-bullets');
+  ul.innerHTML=bullets.map(b=>`<li>${b}</li>`).join('');
+}
+
+function toggleBrief(){
+  briefVisible=!briefVisible;
+  document.getElementById('brief-body').style.display=briefVisible?'block':'none';
+  document.getElementById('brief-toggle').textContent=briefVisible?'hide ▲':'show ▼';
+}
+
+// ── STRAT BADGE IN HEADER ──
+function updateStratBadge(){
+  const badge=document.getElementById('hdr-strat-badge');
+  const s=S.strat;
+  if(s.day&&s.time){
+    badge.textContent='⏱ '+s.day+' '+s.time;
+    badge.style.display='block';
+  } else {
+    badge.style.display='none';
+  }
+}
+
+// ── DATE NAV ──
+function shiftDate(n){
+  const d=new Date(viewDate+'T00:00:00');d.setDate(d.getDate()+n);
+  viewDate=d.toISOString().split('T')[0];
+  renderDateNav();renderAll();
+}
+function goToDate(val){if(val){viewDate=val;renderDateNav();renderAll();}}
+function goToToday(){viewDate=today();renderDateNav();renderAll();}
+function renderDateNav(){
+  document.getElementById('date-main').textContent=fmtFull(viewDate);
+  const diff=Math.round((new Date(viewDate+'T00:00:00')-new Date(today()+'T00:00:00'))/86400000);
+  document.getElementById('date-sub').textContent=
     diff===0?'Today':diff===1?'Tomorrow':diff===-1?'Yesterday':diff>0?`In ${diff} days`:`${Math.abs(diff)} days ago`;
-  document.getElementById('today-btn').classList.toggle('active', isToday(viewDate));
-  document.getElementById('date-picker').value = viewDate;
+  document.getElementById('today-btn').classList.toggle('active',isToday(viewDate));
+  document.getElementById('date-picker').value=viewDate;
 }
 
-// ════════════════════════════════════════
-// TAB SWITCHING
-// ════════════════════════════════════════
-function switchTab(tab) {
-  currentTab = tab;
-  ['day','week','critical','watchlist','more'].forEach(t => {
-    document.getElementById('view-'+t).style.display = t===tab?'block':'none';
-    document.getElementById('tab-'+t)?.classList.toggle('active', t===tab);
+// ── TAB SWITCHING ──
+function switchTab(tab){
+  currentTab=tab;
+  ['day','week','critical','watchlist','more'].forEach(t=>{
+    document.getElementById('view-'+t).style.display=t===tab?'block':'none';
+    document.getElementById('tab-'+t)?.classList.toggle('active',t===tab);
   });
   renderAll();
 }
-function setCritTab(t) {
-  critTab = t;
-  document.getElementById('crit-open-btn').classList.toggle('active', t==='open');
-  document.getElementById('crit-closed-btn').classList.toggle('active', t==='closed');
+function setCritTab(t){
+  critTab=t;
+  document.getElementById('crit-open-btn').classList.toggle('active',t==='open');
+  document.getElementById('crit-closed-btn').classList.toggle('active',t==='closed');
   renderCritical();
 }
-function setWatchTab(t) {
-  watchListTab = t;
-  document.getElementById('watch-open-btn').classList.toggle('active', t==='open');
-  document.getElementById('watch-closed-btn').classList.toggle('active', t==='closed');
+function setWatchTab(t){
+  watchListTab=t;
+  document.getElementById('watch-open-btn').classList.toggle('active',t==='open');
+  document.getElementById('watch-closed-btn').classList.toggle('active',t==='closed');
   renderWatchList();
 }
 
-// ════════════════════════════════════════
-// RENDER ALL
-// ════════════════════════════════════════
-function renderAll() {
+// ── RENDER ALL ──
+function renderAll(){
   updateTabCounts();
-  if(currentTab==='day') renderDay();
+  renderDateNav();
+  if(currentTab==='day'){buildBrief();renderDay();}
   if(currentTab==='week') renderWeek();
   if(currentTab==='critical') renderCritical();
   if(currentTab==='watchlist') renderWatchList();
   if(currentTab==='more') renderMore();
 }
 
-function updateTabCounts() {
-  // Day tab: items for viewDate
-  const dayTasks = S.tasks.filter(t=>effectiveDate(t)===viewDate&&!t.done);
-  const dayDeals = S.deals.filter(d=>effectiveDate(d)===viewDate&&!d.done);
-  const dayWatch = S.watch.filter(w=>effectiveDate(w)===viewDate&&!w.done);
-  document.getElementById('tc-day').textContent = dayTasks.length+dayDeals.length+dayWatch.length;
-
-  // Week
-  const wd = weekDays();
-  const weekOpen = S.tasks.filter(t=>wd.includes(effectiveDate(t))&&!t.done).length +
-    S.deals.filter(d=>wd.includes(effectiveDate(d))&&!d.done).length +
-    S.watch.filter(w=>wd.includes(effectiveDate(w))&&!w.done).length;
-  document.getElementById('tc-week').textContent = weekOpen;
-
-  // Critical
-  const critOpen = [...S.tasks,...S.deals,...S.watch].filter(i=>i.priority==='critical'&&!i.done).length;
-  document.getElementById('tc-critical').textContent = critOpen;
-
-  // Watch list (keep an eye)
-  const watchOpen = [...S.tasks,...S.deals,...S.watch].filter(i=>i.priority==='watch'&&!i.done).length;
-  document.getElementById('tc-watchlist').textContent = watchOpen;
+function updateTabCounts(){
+  const wd=weekDays();
+  const allItems=[...S.tasks,...S.deals,...S.watch];
+  const dayOpen=allItems.filter(i=>effectiveDate(i)===viewDate&&!isDone(i)).length;
+  const weekOpen=allItems.filter(i=>wd.includes(effectiveDate(i))&&!isDone(i)).length;
+  const critOpen=allItems.filter(i=>i.priority==='critical'&&!isDone(i)).length;
+  const watchOpen=allItems.filter(i=>i.priority==='watch'&&!isDone(i)).length;
+  document.getElementById('tc-day').textContent=dayOpen;
+  document.getElementById('tc-week').textContent=weekOpen;
+  document.getElementById('tc-critical').textContent=critOpen;
+  document.getElementById('tc-watchlist').textContent=watchOpen;
 }
 
-// ════════════════════════════════════════
-// DAY VIEW
-// ════════════════════════════════════════
-function renderDay() {
-  const tasks = S.tasks.filter(t=>effectiveDate(t)===viewDate);
-  const deals = S.deals.filter(d=>effectiveDate(d)===viewDate);
-  const watch = S.watch.filter(w=>effectiveDate(w)===viewDate);
-  const all = [...tasks,...deals,...watch];
+// ── DAY VIEW ──
+function renderDay(){
+  const tasks=S.tasks.filter(t=>effectiveDate(t)===viewDate);
+  const deals=S.deals.filter(d=>effectiveDate(d)===viewDate);
+  const watch=S.watch.filter(w=>effectiveDate(w)===viewDate);
+  const all=[...tasks,...deals,...watch];
+  const open=all.filter(i=>!isDone(i)&&!isWaiting(i)).length;
+  const done=all.filter(i=>isDone(i)).length;
+  const waiting=all.filter(i=>isWaiting(i)).length;
+  const carried=all.filter(i=>isCarriedForward(i)).length;
+  const critical=all.filter(i=>i.priority==='critical'&&!isDone(i)).length;
+  document.getElementById('ds-open').textContent=open;
+  document.getElementById('ds-done').textContent=done;
+  document.getElementById('ds-waiting').textContent=waiting;
+  document.getElementById('ds-carried').textContent=carried;
+  document.getElementById('ds-critical').textContent=critical;
+  const countable=all.filter(i=>!isWaiting(i)).length;
+  const pct=countable>0?Math.round(done/countable*100):0;
+  document.getElementById('prog-fill').style.width=pct+'%';
+  document.getElementById('prog-pct').textContent=pct+'%';
 
-  const open = all.filter(i=>!i.done).length;
-  const done = all.filter(i=>i.done).length;
-  const carried = tasks.filter(t=>isCarriedForward(t)).length +
-    deals.filter(d=>isCarriedForward(d)).length +
-    watch.filter(w=>isCarriedForward(w)).length;
-  const critical = all.filter(i=>i.priority==='critical'&&!i.done).length;
+  // Tasks: open first, then waiting, done collapsed at bottom
+  const openTasks=tasks.filter(t=>!isDone(t)&&!isWaiting(t));
+  const waitingTasks=tasks.filter(t=>isWaiting(t));
+  const doneTasks=tasks.filter(t=>isDone(t));
+  const priOrder={critical:0,high:1,medium:2,watch:3};
+  openTasks.sort((a,b)=>(priOrder[a.priority]||2)-(priOrder[b.priority]||2));
 
-  document.getElementById('ds-open').textContent = open;
-  document.getElementById('ds-done').textContent = done;
-  document.getElementById('ds-carried').textContent = carried;
-  document.getElementById('ds-critical').textContent = critical;
+  let tasksHtml='';
+  if(openTasks.length||waitingTasks.length){
+    tasksHtml+=openTasks.map(t=>taskHTML(t)).join('');
+    tasksHtml+=waitingTasks.map(t=>taskHTML(t)).join('');
+  }
+  if(doneTasks.length){
+    tasksHtml+=`<div class="done-history-toggle" onclick="toggleDoneSection('done-tasks-hist')">
+      ▾ ${doneTasks.length} completed task${doneTasks.length>1?'s':''} — tap to view
+    </div>
+    <div class="done-history-wrap" id="done-tasks-hist">${doneTasks.map(t=>taskHTML(t)).join('')}</div>`;
+  }
+  document.getElementById('day-tasks').innerHTML=tasksHtml||
+    '<div class="empty">No focus items — quick capture above or use + Add Task</div>';
 
-  const total = all.length;
-  const pct = total>0?Math.round(done/total*100):0;
-  document.getElementById('prog-fill').style.width = pct+'%';
-  document.getElementById('prog-pct').textContent = pct+'%';
+  const openDeals=deals.filter(d=>!isDone(d)&&!isWaiting(d));
+  const waitDeals=deals.filter(d=>isWaiting(d));
+  const doneDeals=deals.filter(d=>isDone(d));
+  let dealsHtml=openDeals.map(d=>dealHTML(d)).join('')+waitDeals.map(d=>dealHTML(d)).join('');
+  if(doneDeals.length){
+    dealsHtml+=`<div class="done-history-toggle" onclick="toggleDoneSection('done-deals-hist')">
+      ▾ ${doneDeals.length} closed deal${doneDeals.length>1?'s':''} — tap to view
+    </div>
+    <div class="done-history-wrap" id="done-deals-hist">${doneDeals.map(d=>dealHTML(d)).join('')}</div>`;
+  }
+  document.getElementById('day-deals').innerHTML=dealsHtml||
+    '<div class="empty">No deals flagged for this day</div>';
 
-  document.getElementById('day-tasks').innerHTML = tasks.length
-    ? tasks.map(t=>taskHTML(t)).join('')
-    : '<div class="empty">No focus items for this day — add one above</div>';
-
-  document.getElementById('day-deals').innerHTML = deals.length
-    ? deals.map(d=>dealHTML(d)).join('')
-    : '<div class="empty">No deals flagged for this day</div>';
-
-  document.getElementById('day-watch').innerHTML = watch.length
-    ? watch.map(w=>watchHTML(w)).join('')
-    : '<div class="empty">No team flags for this day</div>';
+  const openWatch=watch.filter(w=>!isDone(w)&&!isWaiting(w));
+  const waitWatch=watch.filter(w=>isWaiting(w));
+  const doneWatch=watch.filter(w=>isDone(w));
+  let watchHtml=openWatch.map(w=>watchHTML(w)).join('')+waitWatch.map(w=>watchHTML(w)).join('');
+  if(doneWatch.length){
+    watchHtml+=`<div class="done-history-toggle" onclick="toggleDoneSection('done-watch-hist')">
+      ▾ ${doneWatch.length} closed flag${doneWatch.length>1?'s':''} — tap to view
+    </div>
+    <div class="done-history-wrap" id="done-watch-hist">${doneWatch.map(w=>watchHTML(w)).join('')}</div>`;
+  }
+  document.getElementById('day-watch').innerHTML=watchHtml||
+    '<div class="empty">No team flags for this day</div>';
 }
 
-// ════════════════════════════════════════
-// ITEM HTML
-// ════════════════════════════════════════
-const PRIORITY_BADGE = {
-  critical:'badge-critical', high:'badge-high',
-  medium:'badge-medium', watch:'badge-watch'
-};
-const PRIORITY_LABEL = {critical:'Critical',high:'High',medium:'Medium',watch:'Keep an Eye'};
-const TYPE_BADGE = {
-  client:'badge-client', product:'badge-product', tech:'badge-tech',
-  leadership:'badge-leadership', cst:'badge-cst', finance:'badge-finance', other:'badge-other'
-};
-const TYPE_LABEL = {
-  client:'Client', product:'Product', tech:'Tech',
-  leadership:'Leadership', cst:'CST', finance:'Finance', other:'Other Team'
-};
+function toggleDoneSection(id){
+  const el=document.getElementById(id);
+  if(el) el.style.display=el.style.display==='block'?'none':'block';
+}
 
-function taskHTML(t) {
-  const carried = isCarriedForward(t);
-  const spilled = !!t.spilledDate && !t.done;
-  return `<div class="task-card${t.done?' done-card':''}" id="tc-${t.id}">
+// ── ITEM HTML ──
+const PRI_BADGE={critical:'b-critical',high:'b-high',medium:'b-medium',watch:'b-watch'};
+const PRI_LABEL={critical:'Critical',high:'High',medium:'Medium',watch:'Keep an Eye'};
+const TYPE_BADGE={client:'b-client',product:'b-product',tech:'b-tech',
+  leadership:'b-leadership',cst:'b-cst',finance:'b-finance',other:'b-other'};
+const TYPE_LABEL={client:'Client',product:'Product',tech:'Tech',
+  leadership:'Leadership',cst:'CST',finance:'Finance',other:'Other Team'};
+
+function taskHTML(t){
+  const carried=isCarriedForward(t);
+  const spilled=!!t.spilledDate&&!isDone(t)&&!isWaiting(t);
+  const waiting=isWaiting(t);
+  const done=isDone(t);
+  const cardClass=done?'done-card':waiting?'waiting-card':'';
+  const checkClass=done?'checked':waiting?'waiting-check':'';
+  return`<div class="task-card ${cardClass}" id="tc-${t.id}">
     <div class="task-inner">
       <div class="task-top">
-        <div class="task-check${t.done?' checked':''}" onclick="toggleDone('task','${t.id}')"></div>
+        <div class="task-check ${checkClass}" onclick="cycleDone('task','${t.id}')"></div>
         <div class="task-body">
-          <div class="task-title${t.done?' strikethrough':''}">${t.text}</div>
+          <div class="task-title${done?' struck':''}">${esc(t.text)}</div>
           <div class="task-meta">
-            <span class="badge ${TYPE_BADGE[t.type]||'badge-other'}">${TYPE_LABEL[t.type]||t.type}</span>
-            ${t.clientName?`<span class="badge" style="background:#F0F9FF;color:#0369A1;">${t.clientName}</span>`:''}
-            <span class="badge ${PRIORITY_BADGE[t.priority]||'badge-medium'}">${PRIORITY_LABEL[t.priority]}</span>
-            ${carried?`<span class="badge badge-carried">↩ Carried Forward</span>`:''}
-            ${spilled?`<span class="badge badge-spilled">↷ Spilled to ${fmt(t.spilledDate)}</span>`:''}
+            <span class="badge ${TYPE_BADGE[t.type]||'b-other'}">${TYPE_LABEL[t.type]||t.type}</span>
+            ${t.clientName?`<span class="badge" style="background:#F0F9FF;color:#0369A1;">${esc(t.clientName)}</span>`:''}
+            <span class="badge ${PRI_BADGE[t.priority]||'b-medium'}">${PRI_LABEL[t.priority]}</span>
+            ${waiting?`<span class="badge b-waiting">⏳ Waiting</span>`:''}
+            ${carried?`<span class="badge b-carried">↩ Carried</span>`:''}
+            ${spilled?`<span class="badge b-spilled">↷ ${fmt(t.spilledDate)}</span>`:''}
           </div>
-          ${t.note?`<div class="task-note" onclick="editNote('task','${t.id}')">${t.note}</div>`
+          ${t.note?`<div class="task-note" onclick="editNote('task','${t.id}')">${esc(t.note)}</div>`
             :`<div class="task-note-add" onclick="editNote('task','${t.id}')">+ add note</div>`}
         </div>
         <div class="task-actions">
-          ${!t.done?`<button class="ta-btn" onclick="toggleSpill('${t.id}')">↷ Spill</button>`:''}
+          ${!done?`<button class="ta-btn wait-btn" onclick="toggleWaiting('task','${t.id}')" title="${waiting?'Unmark waiting':'Mark as waiting on someone'}">${waiting?'↺':'⏳'}</button>`:''}
+          ${!done&&!waiting?`<button class="ta-btn" onclick="toggleSpill('${t.id}')">↷</button>`:''}
           <button class="ta-btn" onclick="editTask('${t.id}')">Edit</button>
           <button class="ta-btn del" onclick="deleteItem('task','${t.id}')">✕</button>
         </div>
@@ -728,32 +839,36 @@ function taskHTML(t) {
     <div class="spill-row" id="spill-${t.id}" style="display:none;">
       <label>Move to:</label>
       <input type="date" id="spill-date-${t.id}" value="${t.spilledDate||today()}">
-      <button class="spill-confirm" onclick="confirmSpill('${t.id}')">Confirm</button>
-      <button class="spill-cancel ta-btn" onclick="toggleSpill('${t.id}')">Cancel</button>
+      <button class="spill-confirm" onclick="confirmSpill('${t.id}','task')">Confirm</button>
+      <button class="spill-cancel" onclick="toggleSpill('${t.id}')">Cancel</button>
     </div>
   </div>`;
 }
 
-function dealHTML(d) {
-  const carried = isCarriedForward(d);
-  return `<div class="dw-card${d.done?' done-card':''}" id="dc-${d.id}">
+function dealHTML(d){
+  const carried=isCarriedForward(d);
+  const waiting=isWaiting(d);
+  const done=isDone(d);
+  return`<div class="dw-card${done?' done-card':waiting?' waiting-card':''}" id="dc-${d.id}">
     <div class="dw-inner">
-      <div class="task-check${d.done?' checked':''}" onclick="toggleDone('deal','${d.id}')" style="margin-top:2px;flex-shrink:0;"></div>
+      <div class="task-check${done?' checked':waiting?' waiting-check':''}" onclick="cycleDone('deal','${d.id}')" style="flex-shrink:0;margin-top:2px;"></div>
       <div class="dw-body">
-        <div class="dw-title">${d.account}</div>
-        ${d.desc?`<div class="dw-detail">${d.desc}</div>`:''}
-        ${d.action?`<div class="dw-action">→ ${d.action}</div>`:''}
+        <div class="dw-title">${esc(d.account)}</div>
+        ${d.desc?`<div class="dw-detail">${esc(d.desc)}</div>`:''}
+        ${d.action?`<div class="dw-action">→ ${esc(d.action)}</div>`:''}
         <div class="task-meta" style="margin-top:5px;">
-          <span class="badge ${PRIORITY_BADGE[d.priority]||'badge-high'}">${PRIORITY_LABEL[d.priority]}</span>
-          ${carried?`<span class="badge badge-carried">↩ Carried Forward</span>`:''}
-          ${d.spilledDate&&!d.done?`<span class="badge badge-spilled">↷ ${fmt(d.spilledDate)}</span>`:''}
+          <span class="badge ${PRI_BADGE[d.priority]||'b-high'}">${PRI_LABEL[d.priority]}</span>
+          ${waiting?`<span class="badge b-waiting">⏳ Waiting</span>`:''}
+          ${carried?`<span class="badge b-carried">↩ Carried</span>`:''}
+          ${d.spilledDate&&!done?`<span class="badge b-spilled">↷ ${fmt(d.spilledDate)}</span>`:''}
         </div>
       </div>
       <div class="dw-right">
         ${d.mrr?`<div class="dw-mrr">₹${d.mrr}</div>`:''}
-        <div class="dw-date">${d.done?'✓ Done':('Due: '+fmt(d.targetDate))}</div>
-        <div class="dw-actions">
-          ${!d.done?`<button class="ta-btn" onclick="toggleSpill('${d.id}','deal')">↷</button>`:''}
+        <div class="dw-date">${done?'✓ Done':('Due: '+fmt(d.targetDate))}</div>
+        <div class="dw-acts">
+          ${!done?`<button class="ta-btn wait-btn" onclick="toggleWaiting('deal','${d.id}')">${waiting?'↺':'⏳'}</button>`:''}
+          ${!done&&!waiting?`<button class="ta-btn" onclick="toggleSpill('${d.id}')">↷</button>`:''}
           <button class="ta-btn" onclick="editDeal('${d.id}')">Edit</button>
           <button class="ta-btn del" onclick="deleteItem('deal','${d.id}')">✕</button>
         </div>
@@ -762,31 +877,35 @@ function dealHTML(d) {
     <div class="spill-row" id="spill-${d.id}" style="display:none;">
       <label>Move to:</label>
       <input type="date" id="spill-date-${d.id}" value="${d.spilledDate||today()}">
-      <button class="spill-confirm" onclick="confirmSpillDeal('${d.id}')">Confirm</button>
-      <button class="spill-cancel ta-btn" onclick="toggleSpill('${d.id}','deal')">Cancel</button>
+      <button class="spill-confirm" onclick="confirmSpill('${d.id}','deal')">Confirm</button>
+      <button class="spill-cancel" onclick="toggleSpill('${d.id}')">Cancel</button>
     </div>
   </div>`;
 }
 
-function watchHTML(w) {
-  const carried = isCarriedForward(w);
-  const initials = w.person.split(' ').map(n=>n[0]).join('').substring(0,2).toUpperCase();
-  return `<div class="dw-card${w.done?' done-card':''}" id="wc-${w.id}">
+function watchHTML(w){
+  const carried=isCarriedForward(w);
+  const waiting=isWaiting(w);
+  const done=isDone(w);
+  const initials=w.person.split(' ').map(n=>n[0]).join('').substring(0,2).toUpperCase();
+  return`<div class="dw-card${done?' done-card':waiting?' waiting-card':''}" id="wc-${w.id}">
     <div class="dw-inner">
-      <div class="task-check${w.done?' checked':''}" onclick="toggleDone('watch','${w.id}')" style="margin-top:2px;flex-shrink:0;"></div>
-      <div style="width:30px;height:30px;border-radius:8px;background:var(--blue-bg);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--blue);flex-shrink:0;">${initials}</div>
+      <div class="task-check${done?' checked':waiting?' waiting-check':''}" onclick="cycleDone('watch','${w.id}')" style="flex-shrink:0;margin-top:2px;"></div>
+      <div style="width:28px;height:28px;border-radius:7px;background:var(--blue-bg);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:var(--blue);flex-shrink:0;">${initials}</div>
       <div class="dw-body">
-        <div class="dw-title">${w.person} <span style="font-size:10px;font-weight:600;color:var(--light);margin-left:4px;">${w.role}</span></div>
-        ${w.flag?`<div class="dw-detail">${w.flag}</div>`:''}
-        <div class="task-meta" style="margin-top:5px;">
-          <span class="badge ${PRIORITY_BADGE[w.priority]||'badge-high'}">${PRIORITY_LABEL[w.priority]}</span>
-          ${carried?`<span class="badge badge-carried">↩ Carried Forward</span>`:''}
+        <div class="dw-title">${esc(w.person)} <span style="font-size:10px;font-weight:600;color:var(--light);margin-left:4px;">${w.role}</span></div>
+        ${w.flag?`<div class="dw-detail">${esc(w.flag)}</div>`:''}
+        <div class="task-meta" style="margin-top:4px;">
+          <span class="badge ${PRI_BADGE[w.priority]||'b-high'}">${PRI_LABEL[w.priority]}</span>
+          ${waiting?`<span class="badge b-waiting">⏳ Waiting</span>`:''}
+          ${carried?`<span class="badge b-carried">↩ Carried</span>`:''}
         </div>
       </div>
       <div class="dw-right">
-        <div class="dw-date">${w.done?'✓ Done':('Due: '+fmt(w.targetDate))}</div>
-        <div class="dw-actions">
-          ${!w.done?`<button class="ta-btn" onclick="toggleSpill('${w.id}','watch')">↷</button>`:''}
+        <div class="dw-date">${done?'✓ Done':('Due: '+fmt(w.targetDate))}</div>
+        <div class="dw-acts">
+          ${!done?`<button class="ta-btn wait-btn" onclick="toggleWaiting('watch','${w.id}')">${waiting?'↺':'⏳'}</button>`:''}
+          ${!done&&!waiting?`<button class="ta-btn" onclick="toggleSpill('${w.id}')">↷</button>`:''}
           <button class="ta-btn" onclick="editWatch('${w.id}')">Edit</button>
           <button class="ta-btn del" onclick="deleteItem('watch','${w.id}')">✕</button>
         </div>
@@ -795,413 +914,366 @@ function watchHTML(w) {
     <div class="spill-row" id="spill-${w.id}" style="display:none;">
       <label>Move to:</label>
       <input type="date" id="spill-date-${w.id}" value="${w.spilledDate||today()}">
-      <button class="spill-confirm" onclick="confirmSpillWatch('${w.id}')">Confirm</button>
-      <button class="spill-cancel ta-btn" onclick="toggleSpill('${w.id}','watch')">Cancel</button>
+      <button class="spill-confirm" onclick="confirmSpill('${w.id}','watch')">Confirm</button>
+      <button class="spill-cancel" onclick="toggleSpill('${w.id}')">Cancel</button>
     </div>
   </div>`;
 }
 
-// ════════════════════════════════════════
-// WEEK VIEW
-// ════════════════════════════════════════
-function renderWeek() {
-  const days = weekDays();
-  const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-  const dayNames = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
-  let html = '';
-  days.forEach((d,i) => {
-    const tasks = S.tasks.filter(t=>effectiveDate(t)===d);
-    const deals = S.deals.filter(x=>effectiveDate(x)===d);
-    const watch = S.watch.filter(w=>effectiveDate(w)===d);
-    const all = [...tasks,...deals,...watch];
-    const open = all.filter(x=>!x.done).length;
-    const dt = new Date(d+'T00:00:00');
-    const isT = d===today();
-    html += `<div class="week-day">
+// ── ESCAPE HTML ──
+function esc(s){return(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+
+// ── WEEK VIEW WITH HEATMAP ──
+function renderWeek(){
+  const days=weekDays();
+  const months=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const dayNames=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+  const allItems=[...S.tasks,...S.deals,...S.watch];
+
+  // Build heatmap
+  const counts=days.map(d=>allItems.filter(i=>effectiveDate(i)===d&&!isDone(i)).length);
+  const maxCount=Math.max(...counts,1);
+  let hmHtml=`<div class="week-heatmap"><div class="wh-title">Week Load Distribution</div><div class="wh-days">`;
+  days.forEach((d,i)=>{
+    const c=counts[i];
+    const barH=c>0?Math.max(8,Math.round(c/maxCount*36)):4;
+    const col=c===0?'var(--border)':c>=5?'var(--red)':c>=3?'var(--amber)':'var(--gold)';
+    const isT=d===today();
+    const dt=new Date(d+'T00:00:00');
+    hmHtml+=`<div class="wh-day${isT?' today-col':''}" onclick="goToDate('${d}');switchTab('day')">
+      <div class="wh-day-label">${dayNames[i]}</div>
+      <div class="wh-bar-wrap"><div class="wh-bar" style="height:${barH}px;background:${col};width:${isT?'22px':'18px'};"></div></div>
+      <div class="wh-count" style="color:${c===0?'var(--light)':col};">${c||'—'}</div>
+    </div>`;
+  });
+  hmHtml+=`</div></div>`;
+  document.getElementById('week-heatmap-wrap').innerHTML=hmHtml;
+
+  // Week day list
+  let html='';
+  days.forEach((d,i)=>{
+    const tasks=S.tasks.filter(t=>effectiveDate(t)===d);
+    const deals=S.deals.filter(x=>effectiveDate(x)===d);
+    const watch=S.watch.filter(w=>effectiveDate(w)===d);
+    const all=[...tasks,...deals,...watch];
+    const openC=all.filter(x=>!isDone(x)).length;
+    const dt=new Date(d+'T00:00:00');
+    const isT=d===today();
+    html+=`<div class="week-day">
       <div class="week-day-hdr${isT?' today-hdr':''}">
         <span>${dayNames[i]} ${dt.getDate()} ${months[dt.getMonth()]}${isT?' · Today':''}</span>
-        <span>${open>0?`<span style="color:var(--gold-dim);font-weight:700;">${open} open</span>`:all.length>0?'✓ All done':''}</span>
+        <span>${openC>0?`<span style="color:var(--gold-dim);font-weight:700;">${openC} open</span>`:all.length?'✓ Done':''}</span>
       </div>
       ${all.length?all.map(x=>{
         if(S.tasks.find(t=>t.id===x.id)) return taskHTML(x);
         if(S.deals.find(t=>t.id===x.id)) return dealHTML(x);
         return watchHTML(x);
-      }).join(''):'<div class="empty" style="padding:12px 0;">No items</div>'}
+      }).join(''):`<div class="empty" style="padding:10px 0;">No items</div>`}
     </div>`;
   });
-  document.getElementById('week-content').innerHTML = html || '<div class="empty">No items this week</div>';
+  document.getElementById('week-content').innerHTML=html||'<div class="empty">No items this week</div>';
 }
 
-// ════════════════════════════════════════
-// CRITICAL VIEW
-// ════════════════════════════════════════
-function renderCritical() {
-  const all = [...S.tasks,...S.deals,...S.watch].filter(i=>i.priority==='critical');
-  const items = critTab==='open' ? all.filter(i=>!i.done) : all.filter(i=>i.done);
-  const el = document.getElementById('critical-content');
-  if(!items.length){el.innerHTML=`<div class="empty">No ${critTab} critical items</div>`;return;}
-  el.innerHTML = items.map(x=>{
+// ── CRITICAL VIEW ──
+function renderCritical(){
+  const all=[...S.tasks,...S.deals,...S.watch].filter(i=>i.priority==='critical');
+  const items=critTab==='open'?all.filter(i=>!isDone(i)):all.filter(i=>isDone(i));
+  const el=document.getElementById('critical-content');
+  if(!items.length){el.innerHTML=`<div class="empty">No ${critTab==='open'?'open':'closed'} critical items</div>`;return;}
+  el.innerHTML=items.map(x=>{
     if(S.tasks.find(t=>t.id===x.id)) return taskHTML(x);
     if(S.deals.find(t=>t.id===x.id)) return dealHTML(x);
     return watchHTML(x);
   }).join('');
 }
 
-// ════════════════════════════════════════
-// WATCH LIST VIEW (Keep an Eye)
-// ════════════════════════════════════════
-function renderWatchList() {
-  const all = [...S.tasks,...S.deals,...S.watch].filter(i=>i.priority==='watch');
-  const items = watchListTab==='open' ? all.filter(i=>!i.done) : all.filter(i=>i.done);
-  const el = document.getElementById('watchlist-content');
-  if(!items.length){el.innerHTML=`<div class="empty">No ${watchListTab} watch items</div>`;return;}
-  el.innerHTML = items.map(x=>{
+// ── WATCH LIST VIEW ──
+function renderWatchList(){
+  const all=[...S.tasks,...S.deals,...S.watch].filter(i=>i.priority==='watch');
+  const items=watchListTab==='open'?all.filter(i=>!isDone(i)):all.filter(i=>isDone(i));
+  const el=document.getElementById('watchlist-content');
+  if(!items.length){el.innerHTML=`<div class="empty">No ${watchListTab==='open'?'open':'closed'} watch items</div>`;return;}
+  el.innerHTML=items.map(x=>{
     if(S.tasks.find(t=>t.id===x.id)) return taskHTML(x);
     if(S.deals.find(t=>t.id===x.id)) return dealHTML(x);
     return watchHTML(x);
   }).join('');
 }
 
-// ════════════════════════════════════════
-// PLANNER VIEW
-// ════════════════════════════════════════
-function renderMore() {
-  const s = S.strat;
-  document.getElementById('strat-display').textContent =
-    s.day&&s.time ? s.day+' · '+s.time : 'Not set — protect your thinking time';
-  document.getElementById('strat-notes').value = s.notes||'';
-  document.getElementById('strat-day').value = s.day||'';
-  document.getElementById('strat-time').value = s.time||'';
-  const key = getWeekKey();
+// ── PLANNER ──
+function renderMore(){
+  const s=S.strat;
+  document.getElementById('strat-display').textContent=
+    s.day&&s.time?s.day+' · '+s.time:'Not set — protect your thinking time';
+  document.getElementById('strat-notes').value=s.notes||'';
+  document.getElementById('strat-day').value=s.day||'';
+  document.getElementById('strat-time').value=s.time||'';
+  const key=getWeekKey();
   const months=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-  const mon = new Date(key+'T00:00:00');
-  const sun = new Date(mon); sun.setDate(mon.getDate()+6);
-  document.getElementById('narrative-week').textContent =
+  const mon=new Date(key+'T00:00:00');
+  const sun=new Date(mon);sun.setDate(mon.getDate()+6);
+  document.getElementById('narrative-week').textContent=
     'Week of '+mon.getDate()+' '+months[mon.getMonth()]+' – '+sun.getDate()+' '+months[sun.getMonth()];
-  document.getElementById('narrative-text').value = S.narrative[key]||'';
+  document.getElementById('narrative-text').value=S.narrative[key]||'';
 }
 
-function saveStrat() {
-  S.strat.day = document.getElementById('strat-day').value;
-  S.strat.time = document.getElementById('strat-time').value;
-  S.strat.notes = document.getElementById('strat-notes').value;
-  save(); renderMore(); showToast('Strategic block saved');
+function saveStrat(){
+  S.strat.day=document.getElementById('strat-day').value;
+  S.strat.time=document.getElementById('strat-time').value;
+  S.strat.notes=document.getElementById('strat-notes').value;
+  save();renderMore();updateStratBadge();showToast('Strategic block saved');
 }
 
-function setupNarrativeAutoSave() {
+function setupAutoSave(){
   let t;
-  document.getElementById('narrative-text').addEventListener('input', function() {
-    clearTimeout(t);
-    document.getElementById('narrative-hint').textContent = 'Saving...';
-    t = setTimeout(()=>{
-      S.narrative[getWeekKey()] = this.value;
-      save();
-      document.getElementById('narrative-hint').textContent = 'Saved ✓';
-    }, 800);
+  document.getElementById('narrative-text').addEventListener('input',function(){
+    clearTimeout(t);document.getElementById('narrative-hint').textContent='Saving...';
+    t=setTimeout(()=>{S.narrative[getWeekKey()]=this.value;save();
+      document.getElementById('narrative-hint').textContent='Saved ✓';},800);
   });
-  document.getElementById('strat-notes').addEventListener('input', function(){
-    S.strat.notes = this.value; save();
-  });
+  document.getElementById('strat-notes').addEventListener('input',function(){S.strat.notes=this.value;save();});
 }
 
-function copyNarrative() {
-  const t = document.getElementById('narrative-text').value;
+function copyNarrative(){
+  const t=document.getElementById('narrative-text').value;
   if(!t){showToast('Nothing to copy');return;}
   navigator.clipboard?.writeText(t).then(()=>showToast('Copied')).catch(()=>{
-    const el=document.createElement('textarea'); el.value=t;
-    document.body.appendChild(el); el.select(); document.execCommand('copy');
-    document.body.removeChild(el); showToast('Copied');
+    const el=document.createElement('textarea');el.value=t;
+    document.body.appendChild(el);el.select();document.execCommand('copy');
+    document.body.removeChild(el);showToast('Copied');
   });
 }
 
-// ════════════════════════════════════════
-// ACTIONS — TOGGLE DONE
-// ════════════════════════════════════════
-function toggleDone(type, id) {
-  const arr = type==='task'?S.tasks:type==='deal'?S.deals:S.watch;
-  const item = arr.find(x=>x.id===id);
-  if(!item) return;
-  item.done = !item.done;
-  if(item.done) item.closedDate = today();
-  else delete item.closedDate;
-  save(); renderAll();
-  showToast(item.done ? '✓ Marked done' : 'Reopened');
+// ── STATUS CYCLE: open → done / waiting → open / done → open ──
+function cycleDone(type,id){
+  const arr=type==='task'?S.tasks:type==='deal'?S.deals:S.watch;
+  const item=arr.find(x=>x.id===id);
+  if(!item)return;
+  if(!item.status||item.status==='open'){item.status='done';item.done=true;item.closedDate=today();}
+  else if(item.status==='waiting'){item.status='open';item.done=false;delete item.closedDate;}
+  else{item.status='open';item.done=false;delete item.closedDate;}
+  save();renderAll();
+  showToast(item.status==='done'?'✓ Done':'↺ Reopened');
 }
 
-// ════════════════════════════════════════
-// SPILL
-// ════════════════════════════════════════
-function toggleSpill(id, type) {
-  const row = document.getElementById('spill-'+id);
-  if(row) row.style.display = row.style.display==='none' ? 'flex' : 'none';
+function toggleWaiting(type,id){
+  const arr=type==='task'?S.tasks:type==='deal'?S.deals:S.watch;
+  const item=arr.find(x=>x.id===id);
+  if(!item)return;
+  if(item.status==='waiting'){item.status='open';item.done=false;}
+  else{item.status='waiting';item.done=false;}
+  save();renderAll();
+  showToast(item.status==='waiting'?'⏳ Marked as waiting':'↺ Back to open');
 }
 
-function confirmSpill(id) {
-  const d = document.getElementById('spill-date-'+id).value;
+// ── SPILL ──
+function toggleSpill(id){
+  const row=document.getElementById('spill-'+id);
+  if(row)row.style.display=row.style.display==='none'?'flex':'none';
+}
+function confirmSpill(id,type){
+  const d=document.getElementById('spill-date-'+id)?.value;
   if(!d){showToast('Pick a date');return;}
-  const item = S.tasks.find(t=>t.id===id);
-  if(item){item.spilledDate=d; save(); renderAll(); showToast('↷ Spilled to '+fmt(d));}
-}
-function confirmSpillDeal(id) {
-  const d = document.getElementById('spill-date-'+id).value;
-  if(!d){showToast('Pick a date');return;}
-  const item = S.deals.find(x=>x.id===id);
-  if(item){item.spilledDate=d; save(); renderAll(); showToast('↷ Spilled to '+fmt(d));}
-}
-function confirmSpillWatch(id) {
-  const d = document.getElementById('spill-date-'+id).value;
-  if(!d){showToast('Pick a date');return;}
-  const item = S.watch.find(x=>x.id===id);
-  if(item){item.spilledDate=d; save(); renderAll(); showToast('↷ Spilled to '+fmt(d));}
+  const arr=type==='task'?S.tasks:type==='deal'?S.deals:S.watch;
+  const item=arr.find(x=>x.id===id);
+  if(item){item.spilledDate=d;save();renderAll();showToast('↷ Moved to '+fmt(d));}
 }
 
-// ════════════════════════════════════════
-// DELETE
-// ════════════════════════════════════════
-function deleteItem(type, id) {
-  if(type==='task') S.tasks = S.tasks.filter(x=>x.id!==id);
-  else if(type==='deal') S.deals = S.deals.filter(x=>x.id!==id);
-  else S.watch = S.watch.filter(x=>x.id!==id);
-  save(); renderAll(); showToast('Removed');
+// ── DELETE ──
+function deleteItem(type,id){
+  if(type==='task') S.tasks=S.tasks.filter(x=>x.id!==id);
+  else if(type==='deal') S.deals=S.deals.filter(x=>x.id!==id);
+  else S.watch=S.watch.filter(x=>x.id!==id);
+  save();renderAll();showToast('Removed');
 }
 
-// ════════════════════════════════════════
-// NOTES
-// ════════════════════════════════════════
-function editNote(type, id) {
-  const arr = type==='task'?S.tasks:type==='deal'?S.deals:S.watch;
-  const item = arr.find(x=>x.id===id);
-  document.getElementById('note-item-id').value = id;
-  document.getElementById('note-item-type').value = type;
-  document.getElementById('note-text').value = item?.note||'';
+// ── NOTES ──
+function editNote(type,id){
+  const arr=type==='task'?S.tasks:type==='deal'?S.deals:S.watch;
+  const item=arr.find(x=>x.id===id);
+  document.getElementById('note-item-id').value=id;
+  document.getElementById('note-item-type').value=type;
+  document.getElementById('note-text').value=item?.note||'';
   openModal('modal-note');
   setTimeout(()=>document.getElementById('note-text').focus(),100);
 }
-function saveNote() {
-  const id = document.getElementById('note-item-id').value;
-  const type = document.getElementById('note-item-type').value;
-  const arr = type==='task'?S.tasks:type==='deal'?S.deals:S.watch;
-  const item = arr.find(x=>x.id===id);
-  if(item) item.note = document.getElementById('note-text').value.trim();
-  save(); renderAll(); closeModal('modal-note'); showToast('Note saved');
+function saveNote(){
+  const id=document.getElementById('note-item-id').value;
+  const type=document.getElementById('note-item-type').value;
+  const arr=type==='task'?S.tasks:type==='deal'?S.deals:S.watch;
+  const item=arr.find(x=>x.id===id);
+  if(item)item.note=document.getElementById('note-text').value.trim();
+  save();renderAll();closeModal('modal-note');showToast('Note saved');
 }
 
-// ════════════════════════════════════════
-// ADD / EDIT TASK
-// ════════════════════════════════════════
-function updateTaskTypeUI() {
-  const type = document.getElementById('t-type').value;
-  document.getElementById('t-client-row').style.display = type==='client'?'block':'none';
+// ── ADD / EDIT TASK ──
+function updateTaskTypeUI(){
+  const t=document.getElementById('t-type').value;
+  document.getElementById('t-client-row').style.display=t==='client'?'block':'none';
 }
-
-function openAddTask() {
-  document.getElementById('task-modal-title').textContent = 'Add Task';
-  document.getElementById('task-edit-id').value = '';
-  document.getElementById('t-text').value = '';
-  document.getElementById('t-type').value = 'client';
-  document.getElementById('t-priority').value = 'high';
-  document.getElementById('t-client').value = '';
-  document.getElementById('t-date').value = viewDate;
-  document.getElementById('t-note').value = '';
-  updateTaskTypeUI();
-  openModal('modal-task');
+function openAddTask(){
+  document.getElementById('task-modal-title').textContent='Add Task';
+  document.getElementById('task-edit-id').value='';
+  document.getElementById('t-text').value='';
+  document.getElementById('t-type').value='client';
+  document.getElementById('t-priority').value='high';
+  document.getElementById('t-client').value='';
+  document.getElementById('t-date').value=viewDate;
+  document.getElementById('t-note').value='';
+  updateTaskTypeUI();openModal('modal-task');
   setTimeout(()=>document.getElementById('t-text').focus(),100);
 }
-
-function editTask(id) {
-  const item = S.tasks.find(t=>t.id===id);
-  if(!item) return;
-  document.getElementById('task-modal-title').textContent = 'Edit Task';
-  document.getElementById('task-edit-id').value = id;
-  document.getElementById('t-text').value = item.text;
-  document.getElementById('t-type').value = item.type;
-  document.getElementById('t-priority').value = item.priority;
-  document.getElementById('t-client').value = item.clientName||'';
-  document.getElementById('t-date').value = item.spilledDate||item.targetDate;
-  document.getElementById('t-note').value = item.note||'';
-  updateTaskTypeUI();
-  openModal('modal-task');
+function editTask(id){
+  const item=S.tasks.find(t=>t.id===id);if(!item)return;
+  document.getElementById('task-modal-title').textContent='Edit Task';
+  document.getElementById('task-edit-id').value=id;
+  document.getElementById('t-text').value=item.text;
+  document.getElementById('t-type').value=item.type;
+  document.getElementById('t-priority').value=item.priority;
+  document.getElementById('t-client').value=item.clientName||'';
+  document.getElementById('t-date').value=item.spilledDate||item.targetDate;
+  document.getElementById('t-note').value=item.note||'';
+  updateTaskTypeUI();openModal('modal-task');
 }
-
-function saveTask() {
-  const text = document.getElementById('t-text').value.trim();
+function saveTask(){
+  const text=document.getElementById('t-text').value.trim();
   if(!text){showToast('Enter what needs attention');return;}
-  const editId = document.getElementById('task-edit-id').value;
-  const type = document.getElementById('t-type').value;
-  const date = document.getElementById('t-date').value || viewDate;
-
-  if(editId) {
-    const item = S.tasks.find(t=>t.id===editId);
-    if(item){
-      item.text=text; item.type=type;
-      item.priority=document.getElementById('t-priority').value;
+  const editId=document.getElementById('task-edit-id').value;
+  const type=document.getElementById('t-type').value;
+  const date=document.getElementById('t-date').value||today();
+  if(editId){
+    const item=S.tasks.find(t=>t.id===editId);
+    if(item){item.text=text;item.type=type;item.priority=document.getElementById('t-priority').value;
       item.clientName=type==='client'?document.getElementById('t-client').value.trim():'';
-      item.targetDate=date; item.note=document.getElementById('t-note').value.trim();
-      delete item.spilledDate;
-    }
+      item.targetDate=date;item.note=document.getElementById('t-note').value.trim();
+      delete item.spilledDate;}
     showToast('Task updated');
   } else {
-    S.tasks.push({
-      id: Date.now().toString(36)+Math.random().toString(36).substr(2,4),
-      text, type,
-      priority: document.getElementById('t-priority').value,
-      clientName: type==='client'?document.getElementById('t-client').value.trim():'',
-      targetDate: date,
-      note: document.getElementById('t-note').value.trim(),
-      done: false,
-      createdDate: today()
-    });
+    S.tasks.push({id:uid(),text,type,
+      priority:document.getElementById('t-priority').value,
+      clientName:type==='client'?document.getElementById('t-client').value.trim():'',
+      targetDate:date,note:document.getElementById('t-note').value.trim(),
+      status:'open',done:false,createdDate:today()});
     showToast('Task added');
   }
-  save(); renderAll(); closeModal('modal-task');
+  save();renderAll();closeModal('modal-task');
 }
 
-// ════════════════════════════════════════
-// ADD / EDIT DEAL
-// ════════════════════════════════════════
-function openAddDeal() {
-  document.getElementById('deal-edit-id').value = '';
+// ── ADD / EDIT DEAL ──
+function openAddDeal(){
+  document.getElementById('deal-edit-id').value='';
   ['d-account','d-desc','d-action','d-mrr'].forEach(id=>document.getElementById(id).value='');
-  document.getElementById('d-priority').value = 'high';
-  document.getElementById('d-date').value = viewDate;
-  openModal('modal-deal');
-  setTimeout(()=>document.getElementById('d-account').focus(),100);
+  document.getElementById('d-priority').value='high';
+  document.getElementById('d-date').value=viewDate;
+  openModal('modal-deal');setTimeout(()=>document.getElementById('d-account').focus(),100);
 }
-function editDeal(id) {
-  const item = S.deals.find(d=>d.id===id);
-  if(!item) return;
-  document.getElementById('deal-edit-id').value = id;
-  document.getElementById('d-account').value = item.account;
-  document.getElementById('d-desc').value = item.desc||'';
-  document.getElementById('d-action').value = item.action||'';
-  document.getElementById('d-mrr').value = item.mrr||'';
-  document.getElementById('d-priority').value = item.priority||'high';
-  document.getElementById('d-date').value = item.spilledDate||item.targetDate;
+function editDeal(id){
+  const item=S.deals.find(d=>d.id===id);if(!item)return;
+  document.getElementById('deal-edit-id').value=id;
+  document.getElementById('d-account').value=item.account;
+  document.getElementById('d-desc').value=item.desc||'';
+  document.getElementById('d-action').value=item.action||'';
+  document.getElementById('d-mrr').value=item.mrr||'';
+  document.getElementById('d-priority').value=item.priority||'high';
+  document.getElementById('d-date').value=item.spilledDate||item.targetDate;
   openModal('modal-deal');
 }
-function saveDeal() {
-  const account = document.getElementById('d-account').value.trim();
+function saveDeal(){
+  const account=document.getElementById('d-account').value.trim();
   if(!account){showToast('Enter account name');return;}
-  const editId = document.getElementById('deal-edit-id').value;
-  const date = document.getElementById('d-date').value || viewDate;
-  if(editId) {
-    const item = S.deals.find(d=>d.id===editId);
-    if(item){
-      item.account=account;
-      item.desc=document.getElementById('d-desc').value.trim();
+  const editId=document.getElementById('deal-edit-id').value;
+  const date=document.getElementById('d-date').value||today();
+  if(editId){
+    const item=S.deals.find(d=>d.id===editId);
+    if(item){item.account=account;item.desc=document.getElementById('d-desc').value.trim();
       item.action=document.getElementById('d-action').value.trim();
       item.mrr=document.getElementById('d-mrr').value.trim();
       item.priority=document.getElementById('d-priority').value;
-      item.targetDate=date; delete item.spilledDate;
-    }
+      item.targetDate=date;delete item.spilledDate;}
     showToast('Deal updated');
   } else {
-    S.deals.push({
-      id: Date.now().toString(36)+Math.random().toString(36).substr(2,4),
-      account, desc:document.getElementById('d-desc').value.trim(),
+    S.deals.push({id:uid(),account,desc:document.getElementById('d-desc').value.trim(),
       action:document.getElementById('d-action').value.trim(),
       mrr:document.getElementById('d-mrr').value.trim(),
       priority:document.getElementById('d-priority').value,
-      targetDate:date, done:false, createdDate:today()
-    });
+      targetDate:date,status:'open',done:false,createdDate:today()});
     showToast('Deal flagged');
   }
-  save(); renderAll(); closeModal('modal-deal');
+  save();renderAll();closeModal('modal-deal');
 }
 
-// ════════════════════════════════════════
-// ADD / EDIT WATCH
-// ════════════════════════════════════════
-function openAddWatch() {
-  document.getElementById('watch-edit-id').value = '';
-  document.getElementById('w-person').value = '';
-  document.getElementById('w-flag').value = '';
-  document.getElementById('w-role').value = 'CSM';
-  document.getElementById('w-priority').value = 'high';
-  document.getElementById('w-date').value = viewDate;
-  openModal('modal-watch');
-  setTimeout(()=>document.getElementById('w-person').focus(),100);
+// ── ADD / EDIT WATCH ──
+function openAddWatch(){
+  document.getElementById('watch-edit-id').value='';
+  document.getElementById('w-person').value='';
+  document.getElementById('w-flag').value='';
+  document.getElementById('w-role').value='CSM';
+  document.getElementById('w-priority').value='high';
+  document.getElementById('w-date').value=viewDate;
+  openModal('modal-watch');setTimeout(()=>document.getElementById('w-person').focus(),100);
 }
-function editWatch(id) {
-  const item = S.watch.find(w=>w.id===id);
-  if(!item) return;
-  document.getElementById('watch-edit-id').value = id;
-  document.getElementById('w-person').value = item.person;
-  document.getElementById('w-flag').value = item.flag||'';
-  document.getElementById('w-role').value = item.role||'CSM';
-  document.getElementById('w-priority').value = item.priority||'high';
-  document.getElementById('w-date').value = item.spilledDate||item.targetDate;
+function editWatch(id){
+  const item=S.watch.find(w=>w.id===id);if(!item)return;
+  document.getElementById('watch-edit-id').value=id;
+  document.getElementById('w-person').value=item.person;
+  document.getElementById('w-flag').value=item.flag||'';
+  document.getElementById('w-role').value=item.role||'CSM';
+  document.getElementById('w-priority').value=item.priority||'high';
+  document.getElementById('w-date').value=item.spilledDate||item.targetDate;
   openModal('modal-watch');
 }
-function saveWatch() {
-  const person = document.getElementById('w-person').value.trim();
+function saveWatch(){
+  const person=document.getElementById('w-person').value.trim();
   if(!person){showToast('Enter a name');return;}
-  const editId = document.getElementById('watch-edit-id').value;
-  const date = document.getElementById('w-date').value || viewDate;
-  if(editId) {
-    const item = S.watch.find(w=>w.id===editId);
-    if(item){
-      item.person=person; item.role=document.getElementById('w-role').value;
+  const editId=document.getElementById('watch-edit-id').value;
+  const date=document.getElementById('w-date').value||today();
+  if(editId){
+    const item=S.watch.find(w=>w.id===editId);
+    if(item){item.person=person;item.role=document.getElementById('w-role').value;
       item.flag=document.getElementById('w-flag').value.trim();
       item.priority=document.getElementById('w-priority').value;
-      item.targetDate=date; delete item.spilledDate;
-    }
+      item.targetDate=date;delete item.spilledDate;}
     showToast('Flag updated');
   } else {
-    S.watch.push({
-      id: Date.now().toString(36)+Math.random().toString(36).substr(2,4),
-      person, role:document.getElementById('w-role').value,
+    S.watch.push({id:uid(),person,role:document.getElementById('w-role').value,
       flag:document.getElementById('w-flag').value.trim(),
       priority:document.getElementById('w-priority').value,
-      targetDate:date, done:false, createdDate:today()
-    });
+      targetDate:date,status:'open',done:false,createdDate:today()});
     showToast('Flagged');
   }
-  save(); renderAll(); closeModal('modal-watch');
+  save();renderAll();closeModal('modal-watch');
 }
 
-// ════════════════════════════════════════
-// MODAL HELPERS
-// ════════════════════════════════════════
+// ── MODAL HELPERS ──
 function openModal(id){document.getElementById(id).classList.add('open');}
 function closeModal(id){document.getElementById(id).classList.remove('open');}
 document.querySelectorAll('.modal-bg').forEach(bg=>{
   bg.addEventListener('click',e=>{if(e.target===bg)bg.classList.remove('open');});
 });
 document.addEventListener('keydown',e=>{
-  if(e.key==='Escape') document.querySelectorAll('.modal-bg').forEach(b=>b.classList.remove('open'));
-  if(e.key==='Enter'&&e.target.tagName==='INPUT') {
-    const modal = e.target.closest('.modal');
-    if(modal) {
-      const saveBtn = modal.querySelector('.btn-save');
-      if(saveBtn) saveBtn.click();
-    }
+  if(e.key==='Escape')document.querySelectorAll('.modal-bg').forEach(b=>b.classList.remove('open'));
+  if(e.key==='Enter'&&e.target.tagName==='INPUT'&&!e.target.closest('[type=date]')){
+    const modal=e.target.closest('.modal');
+    if(modal){const s=modal.querySelector('.btn-save');if(s)s.click();}
   }
 });
 
-// ════════════════════════════════════════
-// TOAST
-// ════════════════════════════════════════
-function showToast(msg) {
+// ── TOAST ──
+function showToast(msg){
   const t=document.getElementById('toast');
-  t.textContent=msg; t.classList.add('show');
+  t.textContent=msg;t.classList.add('show');
   setTimeout(()=>t.classList.remove('show'),2400);
 }
 
-// ════════════════════════════════════════
-// PERSISTENCE
-// ════════════════════════════════════════
+// ── UTILS ──
+function uid(){return Date.now().toString(36)+Math.random().toString(36).substr(2,5);}
 function save(){try{localStorage.setItem(SK,JSON.stringify(S));}catch(e){}}
 function load(){
-  try{
-    const r=localStorage.getItem(SK);
-    if(r) S={...S,...JSON.parse(r)};
+  try{const r=localStorage.getItem(SK);
+    if(r){const p=JSON.parse(r);S={...S,...p};}
   }catch(e){}
 }
 
-// ════════════════════════════════════════
-// BOOT
-// ════════════════════════════════════════
 init();
 </script>
 </body>
