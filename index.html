@@ -243,6 +243,31 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--text);
   .day-summary{grid-template-columns:repeat(3,1fr);}
   .day-summary .ds-card:nth-child(4),.day-summary .ds-card:nth-child(5){display:none;}
 }
+
+/* FOCUS CLIENT CARDS */
+.fc-card{background:white;border:1px solid var(--border);border-radius:var(--r);margin-bottom:10px;overflow:hidden;}
+.fc-header{padding:14px 16px;border-bottom:1px solid var(--stone);display:flex;align-items:flex-start;gap:10px;}
+.fc-avatar{width:36px;height:36px;background:var(--ink2);border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--gold);flex-shrink:0;}
+.fc-title{font-size:14px;font-weight:600;color:var(--text);}
+.fc-tags{display:flex;gap:5px;margin-top:4px;flex-wrap:wrap;}
+.fc-tag-g{background:#EAF4EE;color:#1E6641;font-size:10px;font-weight:700;padding:2px 8px;border-radius:8px;}
+.fc-tag-v{background:#EBF2FB;color:#1A4A7C;font-size:10px;font-weight:700;padding:2px 8px;border-radius:8px;}
+.fc-status-a{background:#EAF4EE;color:#1E6641;font-size:10px;font-weight:700;padding:3px 10px;border-radius:10px;}
+.fc-status-p{background:#FDF3E7;color:#8B4513;font-size:10px;font-weight:700;padding:3px 10px;border-radius:10px;}
+.fc-status-f{background:#FDECEA;color:#B03A2E;font-size:10px;font-weight:700;padding:3px 10px;border-radius:10px;}
+.fc-status-o{background:var(--stone);color:var(--mid);font-size:10px;font-weight:700;padding:3px 10px;border-radius:10px;}
+.fc-sec{padding:12px 16px;border-bottom:1px solid var(--stone);}
+.fc-sec:last-child{border-bottom:none;}
+.fc-sec-lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--mid);margin-bottom:8px;}
+.fc-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.fc-f label{display:block;font-size:10px;color:var(--light);font-weight:600;text-transform:uppercase;letter-spacing:.05em;margin-bottom:2px;}
+.fc-fv{font-size:12px;color:var(--text);font-weight:500;}
+.fc-note{display:flex;gap:8px;padding:6px 0;border-bottom:1px solid var(--stone);}
+.fc-note:last-child{border-bottom:none;}
+.fc-note-d{font-size:10px;font-weight:600;color:var(--light);white-space:nowrap;padding-top:1px;min-width:58px;}
+.fc-note-t{font-size:12px;color:var(--text);line-height:1.5;flex:1;}
+.fc-cliff{font-size:12px;color:var(--text);line-height:1.6;background:var(--stone);border-radius:6px;padding:10px;margin-top:6px;}
+
 </style>
 </head>
 <body>
@@ -293,6 +318,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--text);
   <button class="nav-tab" id="tab-critical" onclick="switchTab('critical')">Critical <span class="tab-count" id="tc-critical">0</span></button>
   <button class="nav-tab" id="tab-watchlist" onclick="switchTab('watchlist')">Watch List <span class="tab-count" id="tc-watchlist">0</span></button>
   <button class="nav-tab" id="tab-more" onclick="switchTab('more')">Planner</button>
+  <button class="nav-tab" id="tab-focus" onclick="switchTab('focus')">Focus Clients <span class="tab-count" id="tc-focus">0</span></button>
 </div>
 
 <div class="wrap">
@@ -372,6 +398,25 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--text);
       <button class="oc-tab" id="watch-closed-btn" onclick="setWatchTab('closed')">Closed / Done</button>
     </div>
     <div id="watchlist-content"></div>
+  </div>
+
+  <!-- FOCUS CLIENTS -->
+  <div id="view-focus" style="display:none;">
+
+    <!-- Month Navigator -->
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;">
+      <button class="date-arrow" onclick="shiftFocusMonth(-1)">←</button>
+      <div style="flex:1;text-align:center;">
+        <div style="font-size:15px;font-weight:600;color:var(--text);" id="focus-month-label"></div>
+        <div style="font-size:11px;color:var(--light);" id="focus-month-sub"></div>
+      </div>
+      <button class="date-arrow" onclick="shiftFocusMonth(1)">→</button>
+      <button class="add-btn" id="focus-add-btn" onclick="openAddFocusClient()">+ Add Client</button>
+    </div>
+
+    <!-- Client Cards -->
+    <div id="focus-clients-container"></div>
+
   </div>
 
   <!-- PLANNER -->
@@ -505,12 +550,139 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--text);
   </div>
 </div>
 
+<!-- ADD / EDIT FOCUS CLIENT MODAL -->
+<div class="modal-bg" id="modal-fc">
+  <div class="modal" style="max-width:560px;">
+    <div class="modal-title" id="fc-modal-title">Add Focus Client</div>
+    <input type="hidden" id="fc-edit-id">
+
+    <div class="f-row">
+      <label>Client Name *</label>
+      <input type="text" id="fc-client" placeholder="e.g. Chheda Foods, Parle Products...">
+    </div>
+
+    <div class="f-row">
+      <label>Focus Area * (select one or both)</label>
+      <div style="display:flex;gap:10px;margin-top:4px;">
+        <label style="display:flex;align-items:center;gap:7px;padding:8px 14px;border:1.5px solid var(--border);border-radius:8px;cursor:pointer;flex:1;transition:all .15s;" id="fc-growth-lbl">
+          <input type="checkbox" id="fc-growth" onchange="updateFcFocusUI()" style="width:15px;height:15px;accent-color:var(--green);">
+          <span style="font-size:13px;font-weight:500;">📈 Growth</span>
+        </label>
+        <label style="display:flex;align-items:center;gap:7px;padding:8px 14px;border:1.5px solid var(--border);border-radius:8px;cursor:pointer;flex:1;transition:all .15s;" id="fc-ve-lbl">
+          <input type="checkbox" id="fc-ve" onchange="updateFcFocusUI()" style="width:15px;height:15px;accent-color:var(--blue);">
+          <span style="font-size:13px;font-weight:500;">💡 Value Engineering</span>
+        </label>
+      </div>
+    </div>
+
+    <!-- Growth Fields -->
+    <div id="fc-growth-fields" style="display:none;background:#F0FAF0;border:1px solid var(--green-border,#A8D5B8);border-radius:8px;padding:12px;margin-bottom:10px;">
+      <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--green);margin-bottom:10px;">📈 Growth Details</div>
+      <div class="f-grid">
+        <div class="f-row" style="margin:0;">
+          <label>Potential MRR (₹)</label>
+          <input type="text" id="fc-mrr" placeholder="e.g. 85,000">
+        </div>
+        <div class="f-row" style="margin:0;">
+          <label>Pipeline Stage</label>
+          <input type="text" id="fc-stage" placeholder="e.g. Proposal Sent">
+        </div>
+        <div class="f-row" style="margin:0;grid-column:1/-1;">
+          <label>Key Push / Action</label>
+          <input type="text" id="fc-growth-action" placeholder="e.g. Escalate to VP Sales this week">
+        </div>
+      </div>
+    </div>
+
+    <!-- VE Fields -->
+    <div id="fc-ve-fields" style="display:none;background:#EBF2FB;border:1px solid #A8C8F0;border-radius:8px;padding:12px;margin-bottom:10px;">
+      <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--blue);margin-bottom:10px;">💡 Value Engineering Details</div>
+      <div class="f-grid">
+        <div class="f-row" style="margin:0;">
+          <label>Health / Adoption Score</label>
+          <input type="text" id="fc-health" placeholder="e.g. 68 / 10 modules used">
+        </div>
+        <div class="f-row" style="margin:0;">
+          <label>Key Stakeholder</label>
+          <input type="text" id="fc-stakeholder" placeholder="e.g. Rahul Sharma, IT Head">
+        </div>
+        <div class="f-row" style="margin:0;grid-column:1/-1;">
+          <label>VE Initiative</label>
+          <input type="text" id="fc-ve-initiative" placeholder="e.g. DMS adoption drive, Analytics enablement">
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-btns">
+      <button class="btn-cancel" onclick="closeModal('modal-fc')">Cancel</button>
+      <button class="btn-save" onclick="saveFocusClient()">Save Client</button>
+    </div>
+  </div>
+</div>
+
+<!-- ADD NOTE MODAL -->
+<div class="modal-bg" id="modal-fc-note">
+  <div class="modal">
+    <div class="modal-title">Add Note</div>
+    <input type="hidden" id="fcn-client-id">
+    <div class="f-row">
+      <label>Date</label>
+      <input type="date" id="fcn-date">
+    </div>
+    <div class="f-row">
+      <label>Note *</label>
+      <textarea id="fcn-text" rows="4" placeholder="What happened? Key observations, decisions, outcomes..."></textarea>
+    </div>
+    <div class="modal-btns">
+      <button class="btn-cancel" onclick="closeModal('modal-fc-note')">Cancel</button>
+      <button class="btn-save" onclick="saveFocusNote()">Add Note</button>
+    </div>
+  </div>
+</div>
+
+<!-- STATUS & CLIFFNOTES MODAL -->
+<div class="modal-bg" id="modal-fc-status">
+  <div class="modal">
+    <div class="modal-title">Close Month — <span id="fcs-client-name"></span></div>
+    <input type="hidden" id="fcs-client-id">
+    <div class="f-row">
+      <label>Outcome *</label>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:4px;">
+        <label style="display:flex;flex-direction:column;align-items:center;gap:5px;padding:10px;border:1.5px solid var(--border);border-radius:8px;cursor:pointer;text-align:center;" id="fcs-achieved-lbl">
+          <input type="radio" name="fcs-outcome" value="achieved" onchange="updateFcsUI()">
+          <span style="font-size:18px;">✅</span>
+          <span style="font-size:11px;font-weight:600;">Achieved</span>
+        </label>
+        <label style="display:flex;flex-direction:column;align-items:center;gap:5px;padding:10px;border:1.5px solid var(--border);border-radius:8px;cursor:pointer;text-align:center;" id="fcs-partial-lbl">
+          <input type="radio" name="fcs-outcome" value="partial" onchange="updateFcsUI()">
+          <span style="font-size:18px;">🔶</span>
+          <span style="font-size:11px;font-weight:600;">Partially Achieved</span>
+        </label>
+        <label style="display:flex;flex-direction:column;align-items:center;gap:5px;padding:10px;border:1.5px solid var(--border);border-radius:8px;cursor:pointer;text-align:center;" id="fcs-failed-lbl">
+          <input type="radio" name="fcs-outcome" value="failed" onchange="updateFcsUI()">
+          <span style="font-size:18px;">❌</span>
+          <span style="font-size:11px;font-weight:600;">Failed</span>
+        </label>
+      </div>
+    </div>
+    <div class="f-row">
+      <label>Cliffnotes — What happened? What do you carry forward?</label>
+      <textarea id="fcs-cliffnotes" rows="4" placeholder="Key learnings, what worked, what didn't, what to do differently next month..."></textarea>
+    </div>
+    <div class="modal-btns">
+      <button class="btn-cancel" onclick="closeModal('modal-fc-status')">Cancel</button>
+      <button class="btn-save" onclick="saveFocusStatus()">Save Outcome</button>
+    </div>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <script>
 const SK='avp_v4';
-let S={tasks:[],deals:[],watch:[],strat:{day:'',time:'',notes:''},narrative:{}};
+let S={tasks:[],deals:[],watch:[],strat:{day:'',time:'',notes:''},narrative:{},focusClients:{}};
 let viewDate=today();
+let focusMonth='';
 let currentTab='day';
 let critTab='open';
 let watchListTab='open';
@@ -558,6 +730,221 @@ function isCarriedForward(item){
 function isWaiting(item){return item.status==='waiting';}
 function isDone(item){return item.status==='done'||item.done;}
 
+
+// ════════════════════════════════════════
+// FOCUS CLIENTS
+// ════════════════════════════════════════
+
+function fmtMonthKey(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0');}
+function fmtMonthLabel(key){const[y,m]=key.split('-');const months=['January','February','March','April','May','June','July','August','September','October','November','December'];return months[parseInt(m)-1]+' '+y;}
+function isCurrentMonth(key){return key===fmtMonthKey(new Date());}
+
+function shiftFocusMonth(n){
+  const[y,m]=focusMonth.split('-').map(Number);
+  const d=new Date(y,m-1+n,1);
+  focusMonth=fmtMonthKey(d);
+  renderFocusClients();
+}
+
+function updateFocusTabCount(){
+  const key=fmtMonthKey(new Date());
+  const clients=S.focusClients[key]||[];
+  const open=clients.filter(fc=>!fc.status).length;
+  const el=document.getElementById('tc-focus');
+  if(el)el.textContent=open||clients.length||'0';
+}
+
+function renderFocusClients(){
+  if(!focusMonth)focusMonth=fmtMonthKey(new Date());
+  const isCurrent=isCurrentMonth(focusMonth);
+  const clients=S.focusClients[focusMonth]||[];
+  const lbl=document.getElementById('focus-month-label');
+  const sub=document.getElementById('focus-month-sub');
+  const addBtn=document.getElementById('focus-add-btn');
+  if(lbl)lbl.textContent=fmtMonthLabel(focusMonth);
+  if(sub)sub.textContent=isCurrent?'Current Month':(focusMonth<fmtMonthKey(new Date())?'Past — Read Only':'Future Month');
+  if(addBtn)addBtn.style.display=isCurrent?'block':'none';
+  const container=document.getElementById('focus-clients-container');
+  if(!container)return;
+  if(!clients.length){
+    container.innerHTML=`<div class="empty" style="padding:32px;">${isCurrent?'No focus clients for this month yet. Click &quot;+ Add Client&quot; to define your focus.':'No focus clients were defined for '+fmtMonthLabel(focusMonth)+'.'}</div>`;
+    return;
+  }
+  container.innerHTML=clients.map(fc=>fcCardHTML(fc,isCurrent)).join('');
+}
+
+function fcCardHTML(fc,editable){
+  const statusMap={achieved:['✅ Achieved','fc-status-a'],partial:['🔶 Partial','fc-status-p'],failed:['❌ Failed','fc-status-f'],'':['⏳ In Progress','fc-status-o']};
+  const[statusLabel,statusClass]=statusMap[fc.status||'']||statusMap[''];
+  const initials=fc.client.split(' ').map(n=>n[0]).join('').substring(0,2).toUpperCase();
+  const hasG=fc.focus.includes('growth'),hasV=fc.focus.includes('ve');
+
+  const growthHtml=hasG?`<div class="fc-sec">
+    <div class="fc-sec-lbl" style="color:var(--green);">📈 Growth</div>
+    <div class="fc-grid">
+      <div class="fc-f"><label>Potential MRR</label><div class="fc-fv ${fc.mrr?'':'empty'}">${fc.mrr?'₹'+fc.mrr:'—'}</div></div>
+      <div class="fc-f"><label>Pipeline Stage</label><div class="fc-fv ${fc.stage?'':'empty'}">${esc(fc.stage)||'—'}</div></div>
+      <div class="fc-f" style="grid-column:1/-1;"><label>Key Push</label><div class="fc-fv ${fc.growthAction?'':'empty'}">${esc(fc.growthAction)||'—'}</div></div>
+    </div></div>`:'' ;
+
+  const veHtml=hasV?`<div class="fc-sec">
+    <div class="fc-sec-lbl" style="color:var(--blue);">💡 Value Engineering</div>
+    <div class="fc-grid">
+      <div class="fc-f"><label>Health / Adoption</label><div class="fc-fv ${fc.health?'':'empty'}">${esc(fc.health)||'—'}</div></div>
+      <div class="fc-f"><label>Key Stakeholder</label><div class="fc-fv ${fc.stakeholder?'':'empty'}">${esc(fc.stakeholder)||'—'}</div></div>
+      <div class="fc-f" style="grid-column:1/-1;"><label>VE Initiative</label><div class="fc-fv ${fc.veInitiative?'':'empty'}">${esc(fc.veInitiative)||'—'}</div></div>
+    </div></div>`:'' ;
+
+  const notesHtml=(fc.notes||[]).length
+    ?`<div class="fc-sec"><div class="fc-sec-lbl">Notes Log</div>${fc.notes.map(n=>`<div class="fc-note"><div class="fc-note-d">${fmt(n.date)}</div><div class="fc-note-t">${esc(n.text)}</div></div>`).join('')}${editable?`<button class="add-btn" style="margin-top:8px;" onclick="openAddNote('${fc.id}')">+ Add Note</button>`:''}</div>`
+    :editable?`<div class="fc-sec"><div class="fc-sec-lbl">Notes Log</div><div class="empty" style="padding:8px 0;text-align:left;font-size:12px;">No notes yet — <span style="color:var(--gold-dim);cursor:pointer;" onclick="openAddNote('${fc.id}')">add first note</span></div></div>`
+    :`<div class="fc-sec"><div class="fc-sec-lbl">Notes Log</div><div class="empty" style="padding:8px 0;text-align:left;font-size:12px;">No notes recorded</div></div>`;
+
+  const cliffHtml=fc.cliffnotes?`<div class="fc-sec"><div class="fc-sec-lbl">Cliffnotes</div><div class="fc-cliff">${esc(fc.cliffnotes)}</div></div>`:'';
+
+  const editActions=editable?`<div style="display:flex;gap:4px;flex-shrink:0;margin-top:4px;">
+    <button class="ta-btn" onclick="editFocusClient('${fc.id}')">Edit</button>
+    <button class="ta-btn" onclick="openStatusModal('${fc.id}')" style="${!fc.status?'color:var(--gold-dim);border-color:var(--gold);':''}">
+      ${!fc.status?'Close Month':'Update Status'}
+    </button>
+    <button class="ta-btn del" onclick="deleteFocusClient('${fc.id}')">✕</button>
+  </div>`:'';
+
+  return `<div class="fc-card">
+    <div class="fc-header">
+      <div class="fc-avatar">${initials}</div>
+      <div style="flex:1;">
+        <div class="fc-title">${esc(fc.client)}</div>
+        <div class="fc-tags">${hasG?'<span class="fc-tag-g">📈 Growth</span>':''}${hasV?'<span class="fc-tag-v">💡 Value Engineering</span>':''}</div>
+        ${editActions}
+      </div>
+      <span class="${statusClass}" style="padding:3px 10px;border-radius:10px;white-space:nowrap;flex-shrink:0;font-size:10px;font-weight:700;align-self:flex-start;">${statusLabel}</span>
+    </div>
+    ${growthHtml}${veHtml}${notesHtml}${cliffHtml}
+  </div>`;
+}
+
+function updateFcFocusUI(){
+  const g=document.getElementById('fc-growth').checked;
+  const v=document.getElementById('fc-ve').checked;
+  document.getElementById('fc-growth-fields').style.display=g?'block':'none';
+  document.getElementById('fc-ve-fields').style.display=v?'block':'none';
+  document.getElementById('fc-growth-lbl').style.borderColor=g?'var(--green)':'var(--border)';
+  document.getElementById('fc-ve-lbl').style.borderColor=v?'var(--blue)':'var(--border)';
+}
+
+function updateFcsUI(){
+  const val=document.querySelector('input[name="fcs-outcome"]:checked')?.value;
+  ['achieved','partial','failed'].forEach(v=>{
+    const lbl=document.getElementById('fcs-'+v+'-lbl');
+    if(lbl)lbl.style.borderColor=val===v?'var(--navy)':'var(--border)';
+  });
+}
+
+function openAddFocusClient(){
+  document.getElementById('fc-modal-title').textContent='Add Focus Client';
+  document.getElementById('fc-edit-id').value='';
+  document.getElementById('fc-client').value='';
+  document.getElementById('fc-growth').checked=false;
+  document.getElementById('fc-ve').checked=false;
+  ['fc-mrr','fc-stage','fc-growth-action','fc-health','fc-stakeholder','fc-ve-initiative'].forEach(id=>{document.getElementById(id).value='';});
+  updateFcFocusUI();
+  openModal('modal-fc');
+  setTimeout(()=>document.getElementById('fc-client').focus(),100);
+}
+
+function editFocusClient(id){
+  const clients=S.focusClients[focusMonth]||[];
+  const fc=clients.find(f=>f.id===id);if(!fc)return;
+  document.getElementById('fc-modal-title').textContent='Edit Focus Client';
+  document.getElementById('fc-edit-id').value=id;
+  document.getElementById('fc-client').value=fc.client;
+  document.getElementById('fc-growth').checked=fc.focus.includes('growth');
+  document.getElementById('fc-ve').checked=fc.focus.includes('ve');
+  document.getElementById('fc-mrr').value=fc.mrr||'';
+  document.getElementById('fc-stage').value=fc.stage||'';
+  document.getElementById('fc-growth-action').value=fc.growthAction||'';
+  document.getElementById('fc-health').value=fc.health||'';
+  document.getElementById('fc-stakeholder').value=fc.stakeholder||'';
+  document.getElementById('fc-ve-initiative').value=fc.veInitiative||'';
+  updateFcFocusUI();
+  openModal('modal-fc');
+}
+
+function saveFocusClient(){
+  const client=document.getElementById('fc-client').value.trim();
+  if(!client){showToast('Enter a client name');return;}
+  const hasG=document.getElementById('fc-growth').checked;
+  const hasV=document.getElementById('fc-ve').checked;
+  if(!hasG&&!hasV){showToast('Select at least one focus area');return;}
+  const g=id=>document.getElementById(id).value.trim();
+  const editId=document.getElementById('fc-edit-id').value;
+  if(!S.focusClients[focusMonth])S.focusClients[focusMonth]=[];
+  const clients=S.focusClients[focusMonth];
+  if(editId){
+    const fc=clients.find(f=>f.id===editId);
+    if(fc){
+      fc.client=client;fc.focus=[];
+      if(hasG)fc.focus.push('growth');if(hasV)fc.focus.push('ve');
+      fc.mrr=g('fc-mrr');fc.stage=g('fc-stage');fc.growthAction=g('fc-growth-action');
+      fc.health=g('fc-health');fc.stakeholder=g('fc-stakeholder');fc.veInitiative=g('fc-ve-initiative');
+    }
+    showToast('Client updated');
+  } else {
+    const focus=[];if(hasG)focus.push('growth');if(hasV)focus.push('ve');
+    clients.push({id:uid(),client,focus,mrr:g('fc-mrr'),stage:g('fc-stage'),growthAction:g('fc-growth-action'),health:g('fc-health'),stakeholder:g('fc-stakeholder'),veInitiative:g('fc-ve-initiative'),notes:[],status:'',cliffnotes:'',createdDate:today()});
+    showToast('Focus client added');
+  }
+  save();renderFocusClients();updateFocusTabCount();closeModal('modal-fc');
+}
+
+function deleteFocusClient(id){
+  if(!S.focusClients[focusMonth])return;
+  S.focusClients[focusMonth]=S.focusClients[focusMonth].filter(f=>f.id!==id);
+  save();renderFocusClients();updateFocusTabCount();showToast('Removed');
+}
+
+function openAddNote(clientId){
+  document.getElementById('fcn-client-id').value=clientId;
+  document.getElementById('fcn-date').value=today();
+  document.getElementById('fcn-text').value='';
+  openModal('modal-fc-note');
+  setTimeout(()=>document.getElementById('fcn-text').focus(),100);
+}
+
+function saveFocusNote(){
+  const text=document.getElementById('fcn-text').value.trim();
+  if(!text){showToast('Enter a note');return;}
+  const id=document.getElementById('fcn-client-id').value;
+  const clients=S.focusClients[focusMonth]||[];
+  const fc=clients.find(f=>f.id===id);if(!fc)return;
+  fc.notes=fc.notes||[];
+  fc.notes.push({date:document.getElementById('fcn-date').value,text});
+  fc.notes.sort((a,b)=>a.date<b.date?-1:1);
+  save();renderFocusClients();closeModal('modal-fc-note');showToast('Note added');
+}
+
+function openStatusModal(clientId){
+  const clients=S.focusClients[focusMonth]||[];
+  const fc=clients.find(f=>f.id===clientId);if(!fc)return;
+  document.getElementById('fcs-client-id').value=clientId;
+  document.getElementById('fcs-client-name').textContent=fc.client;
+  document.getElementById('fcs-cliffnotes').value=fc.cliffnotes||'';
+  document.querySelectorAll('input[name="fcs-outcome"]').forEach(r=>{r.checked=r.value===fc.status;});
+  updateFcsUI();openModal('modal-fc-status');
+}
+
+function saveFocusStatus(){
+  const outcome=document.querySelector('input[name="fcs-outcome"]:checked')?.value;
+  if(!outcome){showToast('Select an outcome');return;}
+  const id=document.getElementById('fcs-client-id').value;
+  const clients=S.focusClients[focusMonth]||[];
+  const fc=clients.find(f=>f.id===id);if(!fc)return;
+  fc.status=outcome;fc.cliffnotes=document.getElementById('fcs-cliffnotes').value.trim();
+  save();renderFocusClients();updateFocusTabCount();closeModal('modal-fc-status');
+  showToast(outcome==='achieved'?'✅ Achieved':outcome==='partial'?'🔶 Partial':'❌ Failed');
+}
+
 // ── INIT ──
 function init(){
   load();
@@ -577,6 +964,8 @@ function init(){
   });
   // Strategic block in header
   updateStratBadge();
+  // Focus month default
+  focusMonth = fmtMonthKey(new Date());
 }
 
 // ── QUICK CAPTURE ──
@@ -679,7 +1068,7 @@ function renderDateNav(){
 // ── TAB SWITCHING ──
 function switchTab(tab){
   currentTab=tab;
-  ['day','week','critical','watchlist','more'].forEach(t=>{
+  ['day','week','critical','watchlist','more','focus'].forEach(t=>{
     document.getElementById('view-'+t).style.display=t===tab?'block':'none';
     document.getElementById('tab-'+t)?.classList.toggle('active',t===tab);
   });
@@ -707,6 +1096,8 @@ function renderAll(){
   if(currentTab==='critical') renderCritical();
   if(currentTab==='watchlist') renderWatchList();
   if(currentTab==='more') renderMore();
+  if(currentTab==='focus') renderFocusClients();
+  updateFocusTabCount();
 }
 
 function updateTabCounts(){
