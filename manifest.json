@@ -1,0 +1,11 @@
+{
+  "name": "Animesh's Macro Tracker",
+  "short_name": "Macro Tracker",
+  "description": "Track calories, macros and workouts for an Indian lifestyle",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#15803D",
+  "theme_color": "#15803D",
+  "orientation": "portrait",
+  "icons": [{"src":"icon.svg","sizes":"any","type":"image/svg+xml"}]
+}
